@@ -13,3 +13,7 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | 01  | [HTTP verstehen](./01-basics/01-http/issue.md) |
 
 ## Jakarta EE
+
+| Nr. | Übung                                                             |
+|-----|-------------------------------------------------------------------|
+| 01  | [Servlets – Todos ausgeben](./02-jakarta-ee/01-servlets/issue.md) |
