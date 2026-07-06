@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<server description="new server">
+<server description="todos-server">
 
     <!-- Enable features -->
     <featureManager>
         <feature>jakartaee-8.0</feature>
+        <!-- 
         <feature>microProfile-4.1</feature>
+        -->
     </featureManager>
 
     <!-- This template enables security. To get the full use of all the capabilities, a keystore and user registry are required. -->
