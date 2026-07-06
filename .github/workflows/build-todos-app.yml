@@ -1,0 +1,38 @@
+name: Build todos-app WAR
+
+on:
+  push:
+    paths:
+      - 'todos-app/**'
+      - '.github/workflows/build-todos-app.yml'
+  pull_request:
+    paths:
+      - 'todos-app/**'
+      - '.github/workflows/build-todos-app.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+          cache: maven
+
+      - name: Build WAR
+        working-directory: todos-app
+        run: mvn -B clean package
+
+      - name: Upload WAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: todos-app-war
+          path: todos-app/target/*.war
+          if-no-files-found: error
