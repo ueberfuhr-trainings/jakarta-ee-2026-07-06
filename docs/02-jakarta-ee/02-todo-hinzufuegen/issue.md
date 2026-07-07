@@ -13,8 +13,8 @@ Ausgabe der Todos erscheinen.
 
 ## 🎯 Lernziele
 
-* Du kannst ein HTML-Formular per `POST` an ein Servlet senden.
-* Du kannst in `doPost(...)` die Formular-Parameter auslesen und daraus ein Objekt erzeugen.
+* Du kannst ein HTML-Formular an ein Servlet senden.
+* Du kannst im Servlet die Formular-Parameter auslesen und daraus ein Objekt erzeugen.
 * Du kannst Zustand (die Todo-Liste) über mehrere Servlets hinweg gemeinsam nutzen.
 
 ## ✅ Definition of Done
