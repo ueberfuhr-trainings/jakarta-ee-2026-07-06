@@ -14,6 +14,7 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 
 ## Jakarta EE
 
-| Nr. | Übung                                                             |
-|-----|-------------------------------------------------------------------|
-| 01  | [Servlets – Todos ausgeben](./02-jakarta-ee/01-servlets/issue.md) |
+| Nr. | Übung                                                                       |
+|-----|-----------------------------------------------------------------------------|
+| 01  | [Servlets – Todos ausgeben](./02-jakarta-ee/01-servlets/issue.md)           |
+| 02  | [Servlets – Todo hinzufügen](./02-jakarta-ee/02-todo-hinzufuegen/issue.md)  |
