@@ -24,11 +24,10 @@ public class HelloWorldServlet
 		}
 		
 		// Antwortgenerierung
-		resp.setContentType("text/html");
-		try(PrintWriter out = resp.getWriter()) {
-			out.println("<h1>Hello " + name.toUpperCase() + "</h1>");	
-			out.println(LocalDateTime.now());
-		}
+		req.setAttribute("nameOutput", name);
+		req
+			.getRequestDispatcher("/WEB-INF/displayHelloworld.jsp")
+			.forward(req, resp);
 	}
 
 	
