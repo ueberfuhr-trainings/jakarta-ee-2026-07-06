@@ -16,14 +16,14 @@ import java.util.Collection;
 @WebServlet("/todos")
 public class ReadTodosServlet extends HttpServlet {
 
-    private final TodosService todosService = new TodosService();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
 
         String search = req.getParameter("search");
         Collection<Todo> todos;
+
+        TodosService todosService = TodosService.getInstance(getServletContext());
         if(search != null && !search.trim().isEmpty()) {
         	todos = todosService.getTodos(search.trim());
         } else {

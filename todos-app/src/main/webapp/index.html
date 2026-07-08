@@ -8,9 +8,45 @@
     <h1>Todos-App</h1>
     <p><a href="todos">Alle Todos anzeigen</a></p>
 
+    <h2>Suchen</h2>
     <form action="todos" method="get">
         <input type="text" name="search" placeholder="Titel durchsuchen…">
         <button type="submit">Suchen</button>
     </form>
+
+    <h2>Neues Todo</h2>
+    <form action="add-todo" method="post">
+        <p>
+            <label>Titel:<br>
+                <input type="text" name="title" minlength="3" maxlength="100" required>
+            </label>
+        </p>
+        <p>
+            <label>Beschreibung:<br>
+                <textarea name="description" rows="3" cols="40"></textarea>
+            </label>
+        </p>
+        <p>
+            <label>Frist:<br>
+                <input type="date" name="dueDate" id="dueDate">
+            </label>
+        </p>
+        <button type="submit">Anlegen</button>
+    </form>
+
+    <script>
+        // Optionale Aufgabe: Die Frist beim Laden der Seite auf heute + 2 Wochen
+        // vorbelegen. Wir bauen den ISO-String (yyyy-MM-dd) aus den LOKALEN
+        // Datumsbestandteilen zusammen – toISOString() würde nach UTC umrechnen
+        // und könnte nahe Mitternacht auf den falschen Tag springen.
+        (function () {
+            var d = new Date();
+            d.setDate(d.getDate() + 14);
+            var iso = d.getFullYear() + '-'
+                + String(d.getMonth() + 1).padStart(2, '0') + '-'
+                + String(d.getDate()).padStart(2, '0');
+            document.getElementById('dueDate').value = iso;
+        })();
+    </script>
 </body>
 </html>
