@@ -35,12 +35,12 @@ ein als Text-/HTML-Template geschriebenes Servlet.
    - per **Forward** an die JSP weiterleitet (Tipp: `req.getRequestDispatcher(...).forward(req, resp)`).
 3. **Erste Ausgabe – Collection direkt:** Gib in der JSP die übergebene Collection zunächst unverändert aus (Tipp: Expression Language, z. B. `${todos}`). Baue und starte die Anwendung mit `mvn liberty:dev` und rufe [http://localhost:9080/todos-app/todos](http://localhost:9080/todos-app/todos) auf – es sollte die (per `toString()` dargestellte) Collection erscheinen.
 4. **Zweite Ausgabe – mit JSTL:** Stelle die Todos nun sauber als HTML dar (z. B. als Liste oder Tabelle):
-   - Nimm bei Bedarf eine **JSTL-Dependency** in die `pom.xml` auf, damit die Tags in Entwicklungsumgebung und Laufzeit aufgelöst werden. Die API genügt als `provided`, da die Laufzeit (Open Liberty) die Implementierung mitbringt:
+   - Nimm bei Bedarf eine **JSTL-Dependency** in die `pom.xml` auf, damit die Tags in der Entwicklungsumgebung aufgelöst werden. Wichtig: Das reine API-Artefakt enthält **keine** TLDs (Tag Library Descriptors) – und ohne TLD kann die IDE die `<c:...>`-Tags nicht auflösen. Nimm daher die **Implementierung** (GlassFish), die die TLDs mitbringt. Als `provided`, da die Laufzeit (Open Liberty) die JSTL selbst bereitstellt:
      ```xml
      <dependency>
-         <groupId>jakarta.servlet.jsp.jstl</groupId>
-         <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-         <version>1.2.7</version>
+         <groupId>org.glassfish.web</groupId>
+         <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+         <version>1.2.6</version>
          <scope>provided</scope>
      </dependency>
      ```
