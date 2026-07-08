@@ -16,7 +16,7 @@ import java.util.Collection;
 @WebServlet("/todos")
 public class ReadTodosServlet extends HttpServlet {
 
-    private final TodosService todosService = new TodosService();
+    private final TodosService todosService = TodosService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

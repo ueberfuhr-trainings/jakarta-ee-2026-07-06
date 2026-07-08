@@ -11,9 +11,20 @@ import java.util.stream.Collectors;
  */
 public class TodosService {
 
+    private static final TodosService INSTANCE = new TodosService();
+
+    /**
+     * Der Service wird von mehreren Servlets gemeinsam genutzt und muss daher
+     * dieselbe Datenbasis verwenden. Solange wir noch keine Dependency Injection
+     * einsetzen, lösen wir das über ein einfaches Singleton.
+     */
+    public static TodosService getInstance() {
+        return INSTANCE;
+    }
+
     private final Collection<Todo> todos = new ArrayList<>();
 
-    public TodosService() {
+    private TodosService() {
     	this.addTodo(
     			new Todo()
     				.setTitle("Einkaufen gehen")
