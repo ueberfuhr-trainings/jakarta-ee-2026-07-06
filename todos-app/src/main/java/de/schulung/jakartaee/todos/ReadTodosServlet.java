@@ -1,52 +1,41 @@
 package de.schulung.jakartaee.todos;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 
 /**
- * Gibt die Todos als Plain Text aus. Über den optionalen Query-Parameter
- * {@code search} kann case-insensitive nach im Titel enthaltenem Text
- * gefiltert werden.
+ * Beschafft die Todos (optional über den Query-Parameter {@code search}
+ * case-insensitive nach im Titel enthaltenem Text gefiltert), stellt sie als
+ * Request-Attribut bereit und leitet die Darstellung per Forward an die JSP
+ * weiter. Das Servlet erzeugt selbst kein HTML mehr.
  */
 @WebServlet("/todos")
 public class ReadTodosServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/html");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
         String search = req.getParameter("search");
-        Collection<Todo> todos;
 
         TodosService todosService = TodosService.getInstance(getServletContext());
-        if(search != null && !search.trim().isEmpty()) {
-        	todos = todosService.getTodos(search.trim());
+        Collection<Todo> todos;
+        if (search != null && !search.trim().isEmpty()) {
+            todos = todosService.getTodos(search.trim());
         } else {
-        	todos = todosService.getTodos();
+            todos = todosService.getTodos();
         }
 
-        try(PrintWriter out = resp.getWriter()) {
-        	out.print("<h1>Todos</h1>");
-        	out.print("<ul>");
-            for (Todo todo : todos) {
-                out.print("<li>");
-                out.print("[" + todo.getStatus() + "] ");
-                out.print(todo.getTitle());
-                out.print(" - ");
-                out.print(todo.getDescription());
-                if(null != todo.getDueDate()) {
-                	out.print(" (bis ");
-                	out.print(todo.getDueDate());
-                	out.print(")");
-            	}                    
-            }    
-            out.print("</ul>");
-        }
+        req
+        	.setAttribute("todos", todos);
+        req
+        	.getRequestDispatcher("/WEB-INF/displayTodos.jsp")
+        	.forward(req, resp);
     }
 
 }
