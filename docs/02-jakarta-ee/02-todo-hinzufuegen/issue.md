@@ -21,7 +21,7 @@ Ausgabe der Todos erscheinen.
 
 * [ ] Es gibt ein HTML-Formular mit Eingabefeldern für Titel, Beschreibung und Frist.
 * [ ] Ein Servlet liest die Formulardaten aus, erzeugt ein Todo und fügt es dem Service hinzu.
-* [ ] Ein über das Formular hinzugefügtes Todo erscheint anschließend in der Ausgabe des `ReadTodosServlet` (Aufruf von `/todos`).
+* [ ] Das hinzugefügte Todo wird beim Aufruf von `/todos` angezeigt.
 * [ ] Ihr habt die Reflexionsfragen schriftlich beantwortet.
 
 ## 🪜 Arbeitsschritte
@@ -37,7 +37,7 @@ Ausgabe der Todos erscheinen.
    - Lies die Formular-Parameter mit `req.getParameter(...)` aus.
    - Wandle die Frist in ein `LocalDate` um (Tipp: `LocalDate.parse(...)` verarbeitet das Format `yyyy-MM-dd`, das ein `<input type="date">` liefert).
    - Erzeuge ein neues `Todo` und füge es über den Service hinzu.
-   - Gib eine kurze Rückmeldung aus (z. B. „Todo hinzugefügt").
+   - Generiere eine passende Response.
 4. Baue und starte die Anwendung mit `mvn liberty:dev` und **teste**:
    - Sende das Formular ab.
    - Rufe anschließend [http://localhost:9080/todos-app/todos](http://localhost:9080/todos-app/todos) auf und prüfe, ob Dein neues Todo dort erscheint.

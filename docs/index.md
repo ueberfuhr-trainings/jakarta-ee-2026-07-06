@@ -18,3 +18,4 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 |-----|-----------------------------------------------------------------------------|
 | 01  | [Servlets – Todos ausgeben](./02-jakarta-ee/01-servlets/issue.md)           |
 | 02  | [Servlets – Todo hinzufügen](./02-jakarta-ee/02-todo-hinzufuegen/issue.md)  |
+| 03  | [JSPs – Todos als View](./02-jakarta-ee/03-jsp/issue.md)                    |
