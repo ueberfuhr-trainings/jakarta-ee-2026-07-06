@@ -5,21 +5,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletContext;
+
 /**
  * Verwaltet die Todos. Vorerst nur eine In-Memory-Collection mit
  * Beispieldaten und einem Getter zum Auslesen.
  */
 public class TodosService {
 
-    private static final TodosService INSTANCE = new TodosService();
-
     /**
      * Der Service wird von mehreren Servlets gemeinsam genutzt und muss daher
      * dieselbe Datenbasis verwenden. Solange wir noch keine Dependency Injection
      * einsetzen, lösen wir das über ein einfaches Singleton.
      */
-    public static TodosService getInstance() {
-        return INSTANCE;
+    public static synchronized TodosService getInstance(ServletContext ctx) {
+        TodosService result;
+    	result = (TodosService) ctx.getAttribute("todosService");
+    	if(null == result) {
+    		result = new TodosService();
+    		ctx.setAttribute("todosService", result);
+    		
+    	}
+    	return result;
     }
 
     private final Collection<Todo> todos = new ArrayList<>();

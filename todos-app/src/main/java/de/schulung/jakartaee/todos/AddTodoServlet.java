@@ -18,8 +18,6 @@ import java.util.List;
 @WebServlet("/add-todo")
 public class AddTodoServlet extends HttpServlet {
 
-    private final TodosService todosService = TodosService.getInstance();
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
@@ -50,7 +48,8 @@ public class AddTodoServlet extends HttpServlet {
         	resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Todo ist nicht valide.");
             return;
         }
-
+        
+        TodosService todosService = TodosService.getInstance(getServletContext());
         todosService.addTodo(
         		new Todo()
                 	.setTitle(trimmedTitle)
