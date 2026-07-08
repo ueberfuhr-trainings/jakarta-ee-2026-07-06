@@ -22,6 +22,7 @@ Ausgabe der Todos erscheinen.
 * [ ] Es gibt ein HTML-Formular mit Eingabefeldern für Titel, Beschreibung und Frist.
 * [ ] Ein Servlet liest die Formulardaten aus, erzeugt ein Todo und fügt es dem Service hinzu.
 * [ ] Das hinzugefügte Todo wird beim Aufruf von `/todos` angezeigt.
+* [ ] *(Optional)* Die Eingaben werden validiert; bei ungültigen Daten wird kein Todo angelegt und der Benutzer erhält eine verständliche Rückmeldung.
 * [ ] Ihr habt die Reflexionsfragen schriftlich beantwortet.
 
 ## 🪜 Arbeitsschritte
@@ -41,6 +42,10 @@ Ausgabe der Todos erscheinen.
 4. Baue und starte die Anwendung mit `mvn liberty:dev` und **teste**:
    - Sende das Formular ab.
    - Rufe anschließend [http://localhost:9080/todos-app/todos](http://localhost:9080/todos-app/todos) auf und prüfe, ob Dein neues Todo dort erscheint.
+5. **(Optional) Validierung.** Überlege Dir, was passiert, wenn der Benutzer unsinnige oder unvollständige Daten schickt. Prüfe die Eingaben, bevor Du ein Todo anlegst, und lehne ungültige Eingaben mit einer verständlichen Rückmeldung ab. Fordere mindestens folgende Regeln:
+   - Der **Titel** muss angegeben sein und **3 bis 100 Zeichen** lang sein.
+   - Die **Frist** (falls angegeben) muss **heute oder in der Zukunft** liegen.
+6. **(Optional) Vorbelegung der Frist.** Sorge dafür, dass das Frist-Feld beim Laden der Seite bereits auf ein Datum **zwei Wochen in der Zukunft** vorbelegt ist.
 
 ## 📚 Selbstlernmaterial
 
