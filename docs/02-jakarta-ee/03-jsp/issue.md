@@ -28,6 +28,8 @@ ein als Text-/HTML-Template geschriebenes Servlet.
 ## 🪜 Arbeitsschritte
 
 1. Lege im Webapp-Verzeichnis eine **JSP** für die Anzeige der Todos an.
+
+   > Hinweis: In der Liberty-Konfiguration muss das **JSP-Feature** aktiv sein (`jsp-2.3`). Das umfassende Feature `jakartaee-8.0` enthält es bereits – hast Du in einer früheren Übung jedoch auf `servlet-4.0` reduziert, ergänze `<feature>jsp-2.3</feature>`. Die JSTL ist im JSP-Feature enthalten und benötigt **kein** eigenes Feature.
 2. Passe das Servlet, das bisher die Todos ausgibt, so an, dass es die Ausgabe **nicht mehr selbst** erzeugt, sondern:
    - die Todo-Collection als **Request-Attribut** ablegt (Tipp: `req.setAttribute("todos", ...)`),
    - per **Forward** an die JSP weiterleitet (Tipp: `req.getRequestDispatcher(...).forward(req, resp)`).
