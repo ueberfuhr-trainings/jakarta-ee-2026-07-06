@@ -14,16 +14,19 @@ public class TodosService {
     private final Collection<Todo> todos = new ArrayList<>();
 
     public TodosService() {
-        todos.add(new Todo(
-                "Einkaufen gehen",
-                "Milch, Brot und Butter besorgen",
-                LocalDate.of(2026, 7, 10),
-                Status.ERSTELLT));
-        todos.add(new Todo(
-                "Übung vorbereiten",
-                "Servlet-Übung für die Schulung fertigstellen",
-                LocalDate.of(2026, 7, 8),
-                Status.IN_ARBEIT));
+    	this.addTodo(
+    			new Todo()
+    				.setTitle("Einkaufen gehen")
+    				.setDescription("Milch, Brot und Butter besorgen")
+    				.setDueDate(LocalDate.of(2026, 7, 10))
+    		);
+    	this.addTodo(
+        		new Todo()
+        			.setTitle("Übung vorbereiten")
+        			.setDescription("Servlet-Übung für die Schulung fertigstellen")
+        			.setDueDate(LocalDate.of(2026, 7, 8))
+        			.setStatus(TodoStatus.IN_ARBEIT)
+        	);
     }
 
     public Collection<Todo> getTodos() {
@@ -35,6 +38,10 @@ public class TodosService {
     			.stream()
     			.filter(todo -> todo.getTitle().toLowerCase().contains(search.toLowerCase()))
     			.collect(Collectors.toList());
+    }
+    
+    public void addTodo(Todo todo) {
+    	todos.add(todo);
     }
 
 }
