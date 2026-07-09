@@ -20,3 +20,4 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | 02  | [Servlets – Todo hinzufügen](./02-jakarta-ee/02-todo-hinzufuegen/issue.md)  |
 | 03  | [JSPs – Todos als View](./02-jakarta-ee/03-jsp/issue.md)                    |
 | 04  | [Dependency Injection mit CDI](./02-jakarta-ee/04-cdi/issue.md)             |
+| 05  | [Bean Validation](./02-jakarta-ee/05-bean-validation/issue.md)              |
