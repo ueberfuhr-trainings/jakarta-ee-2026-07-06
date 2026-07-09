@@ -22,6 +22,12 @@
             <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+		    <groupId>org.glassfish.web</groupId>
+		    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+		    <version>1.2.6</version>
+		    <scope>provided</scope>
+		</dependency>
         <!--
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>

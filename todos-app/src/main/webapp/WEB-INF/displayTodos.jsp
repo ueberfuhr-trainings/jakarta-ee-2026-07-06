@@ -1,0 +1,34 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Todos</title>
+</head>
+<body>
+    <h1>Todos</h1>
+    
+    <c:choose>
+    	<c:when test="${empty todos}">
+    		<p>Es sind keine Todos vorhanden.</p>
+    	</c:when>
+    	<c:otherwise>
+    	    <ul>
+		        <c:forEach var="todo" items="${todos}">
+		            <li>
+		                [<c:out value="${todo.status}"/>]
+		                <c:out value="${todo.title}"/>
+		                &ndash; <c:out value="${todo.description}"/>
+		                <c:if test="${not empty todo.dueDate}">
+		                    (bis <c:out value="${todo.dueDate}"/>)
+		                </c:if>
+		            </li>
+		        </c:forEach>
+		    </ul>
+    	</c:otherwise>
+    </c:choose>
+
+    <p><a href="index.html">Zur Startseite</a></p>
+</body>
+</html>
