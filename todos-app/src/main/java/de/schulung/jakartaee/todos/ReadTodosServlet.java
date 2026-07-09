@@ -1,5 +1,6 @@
 package de.schulung.jakartaee.todos;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,13 +18,15 @@ import java.util.Collection;
 @WebServlet("/todos")
 public class ReadTodosServlet extends HttpServlet {
 
+	@Inject
+	TodosService todosService;
+	
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         String search = req.getParameter("search");
 
-        TodosService todosService = TodosService.getInstance(getServletContext());
         Collection<Todo> todos;
         if (search != null && !search.trim().isEmpty()) {
             todos = todosService.getTodos(search.trim());
