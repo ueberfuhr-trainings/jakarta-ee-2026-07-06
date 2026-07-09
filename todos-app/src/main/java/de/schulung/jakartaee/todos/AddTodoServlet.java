@@ -1,5 +1,6 @@
 package de.schulung.jakartaee.todos;
 
+import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,9 @@ import java.util.List;
  */
 @WebServlet("/add-todo")
 public class AddTodoServlet extends HttpServlet {
+
+	@Inject
+	TodosService todosService;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -49,7 +53,6 @@ public class AddTodoServlet extends HttpServlet {
             return;
         }
         
-        TodosService todosService = TodosService.getInstance(getServletContext());
         todosService.addTodo(
         		new Todo()
                 	.setTitle(trimmedTitle)
