@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * Ein einzelnes Todo mit Titel, Beschreibung, Fälligkeitsdatum und Status.
@@ -12,10 +11,11 @@ import javax.validation.constraints.Size;
 public class Todo {
 
 	@NotNull
-	@Size(min = 3, max = 100)
+	@Title
     private String title;
     private String description;
     @FutureOrPresent
+    @MaximumFuture(3)
     private LocalDate dueDate;
     @NotNull
     private TodoStatus status = TodoStatus.ERSTELLT;
