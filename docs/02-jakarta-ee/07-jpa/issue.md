@@ -36,10 +36,11 @@ annotieren direkt das vorhandene `Todo`.
    <dependency>
        <groupId>com.h2database</groupId>
        <artifactId>h2</artifactId>
-       <version>2.2.224</version>
+       <version>1.4.200</version>
        <scope>provided</scope>
    </dependency>
    ```
+   > Tipp: Nimm bewusst H2 **1.4.200**. Neuere H2-2.x-Versionen lehnen das von EclipseLink (dem JPA-Provider in Liberty) erzeugte `CREATE TABLE ... BIGINT IDENTITY` mit einem Syntaxfehler ab.
 2. **Treiber für Liberty bereitstellen und DB-Pfad festlegen.** Erweitere das `liberty-maven-plugin` um eine `<configuration>`, die die H2-JAR in die geteilten Ressourcen des Servers kopiert und den Datenbank-Ordner als Liberty-Variable auf den Projektordner `.localdb` setzt:
    ```xml
    <configuration>
@@ -97,17 +98,17 @@ annotieren direkt das vorhandene `Todo`.
    ```
    > Wir nutzen bewusst `create` (nur anlegen), nicht `drop-and-create` – sonst wären die Daten nach jedem Neustart wieder weg.
 5. **`Todo` zur Entity machen.** Annotiere die Klasse mit `@Entity` und ergänze einen **Primärschlüssel** (Tipp: ein Feld `id` mit `@Id` und `@GeneratedValue`). Denke an die Besonderheiten:
-   - Der Status ist ein Enum – überlege, wie er gespeichert werden soll (Tipp: `@Enumerated(EnumType.STRING)`).
-   - Die vorhandenen Bean-Validation-Annotationen dürfen bleiben; JPA und Bean Validation koexistieren am selben Feld.
-   - JPA benötigt einen parameterlosen Konstruktor (ist bereits vorhanden).
+    - Der Status ist ein Enum – überlege, wie er gespeichert werden soll (Tipp: `@Enumerated(EnumType.STRING)`).
+    - Die vorhandenen Bean-Validation-Annotationen dürfen bleiben; JPA und Bean Validation koexistieren am selben Feld.
+    - JPA benötigt einen parameterlosen Konstruktor (ist bereits vorhanden).
 6. **`TodosService` auf JPA umstellen.** Ersetze die In-Memory-Collection:
-   - Lass Dir einen `EntityManager` injizieren (Tipp: `@PersistenceContext`).
-   - Speichere im Hinzufügen (Tipp: `em.persist(todo)`). Schreibende Operationen laufen in einer Transaktion – markiere die Methode passend (Tipp: `@Transactional`).
-   - Lies alle Todos per JPQL (Tipp: `SELECT t FROM Todo t`). Auch die Titelsuche lässt sich als JPQL mit `LIKE` formulieren.
+    - Lass Dir einen `EntityManager` injizieren (Tipp: `@PersistenceContext`).
+    - Speichere im Hinzufügen (Tipp: `em.persist(todo)`). Schreibende Operationen laufen in einer Transaktion – markiere die Methode passend (Tipp: `@Transactional`).
+    - Lies alle Todos per JPQL (Tipp: `SELECT t FROM Todo t`). Auch die Titelsuche lässt sich als JPQL mit `LIKE` formulieren.
 7. **Testen.**
-   - Lege über das Formular ein Todo an und prüfe die Anzeige.
-   - **Stoppe den Server und starte ihn neu.** Das Todo muss weiterhin vorhanden sein – der Beweis, dass es persistiert wurde.
-   - Wirf einen Blick in den Ordner `.localdb` – dort liegt jetzt die H2-Datenbankdatei.
+    - Lege über das Formular ein Todo an und prüfe die Anzeige.
+    - **Stoppe den Server und starte ihn neu.** Das Todo muss weiterhin vorhanden sein – der Beweis, dass es persistiert wurde.
+    - Wirf einen Blick in den Ordner `.localdb` – dort liegt jetzt die H2-Datenbankdatei.
 
 ## 📚 Selbstlernmaterial
 
