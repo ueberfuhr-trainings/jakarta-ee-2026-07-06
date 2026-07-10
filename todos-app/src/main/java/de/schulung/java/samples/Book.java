@@ -2,6 +2,7 @@ package de.schulung.java.samples;
 
 public class Book {
 	
+	@MyNotNull
 	private String title;
 
 	public String getTitle() {
