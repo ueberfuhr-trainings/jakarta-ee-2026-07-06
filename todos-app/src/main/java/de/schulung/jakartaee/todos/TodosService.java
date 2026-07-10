@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.servlet.ServletContext;
+import javax.validation.Valid;
 
 /**
  * Verwaltet die Todos. Vorerst nur eine In-Memory-Collection mit
@@ -44,7 +44,7 @@ public class TodosService {
     			.collect(Collectors.toList());
     }
     
-    public void addTodo(Todo todo) {
+    public void addTodo(@Valid Todo todo) {
     	todos.add(todo);
     }
 

@@ -5,9 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Hello ${nameOutput}</title>
+<title>Hello ${message.name}</title>
 </head>
 <body>
-<h1>Hello ${nameOutput}</h1>
+<h1>Hello ${message.name}</h1>
 </body>
 </html>
