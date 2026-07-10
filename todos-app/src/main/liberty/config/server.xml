@@ -8,10 +8,22 @@
         <feature>jsp-2.3</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
+        <feature>jpa-2.2</feature>
         <!--
         <feature>microProfile-4.1</feature>
         -->
     </featureManager>
+
+    <!-- H2-JDBC-Treiber (per liberty-maven-plugin nach shared/resources kopiert) -->
+    <library id="h2">
+        <fileset dir="${shared.resource.dir}" includes="h2-*.jar"/>
+    </library>
+
+    <!-- Dateibasierte H2-Datenbank im Projektordner .localdb -->
+    <dataSource id="todosDS" jndiName="jdbc/todos">
+        <jdbcDriver libraryRef="h2"/>
+        <properties URL="jdbc:h2:file:${todos.db.dir}/todos;AUTO_SERVER=TRUE" user="sa" password="sa"/>
+    </dataSource>
 
     <!-- This template enables security. To get the full use of all the capabilities, a keystore and user registry are required. -->
 
