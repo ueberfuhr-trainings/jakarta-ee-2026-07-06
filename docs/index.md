@@ -22,3 +22,4 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | 04  | [Dependency Injection mit CDI](./02-jakarta-ee/04-cdi/issue.md)                        |
 | 05  | [Bean Validation](./02-jakarta-ee/05-bean-validation/issue.md)                         |
 | 06  | [Bean Validation – Custom Constraints](./02-jakarta-ee/06-custom-constraints/issue.md) |
+|     | [Lernstandskontrolle (Quiz)](reflection/quiz-week1.html)                               |

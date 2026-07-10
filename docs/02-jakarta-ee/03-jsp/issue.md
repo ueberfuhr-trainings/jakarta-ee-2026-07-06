@@ -61,7 +61,7 @@ ein als Text-/HTML-Template geschriebenes Servlet.
 
 ## 🤔 Reflexionsfragen
 
-* Was passiert technisch mit einer JSP, bevor sie zum ersten Mal ausgeliefert wird? In welchem Verhältnis stehen JSP und Servlet zueinander?
+* Was passiert technisch mit einer JSP, bevor sie zum ersten Mal ausgeführt wird? In welchem Verhältnis stehen JSP und Servlet zueinander?
 * Welche Verantwortlichkeiten hat nach dieser Übung das Servlet, welche die JSP? Warum ist diese Trennung sinnvoll?
 * Wie gelangt die Todo-Collection vom Servlet in die JSP?
 * Worin unterscheidet sich die direkte Ausgabe der Collection von der Darstellung mit `<c:forEach>`? Welche Variante würdest Du in einer echten Anwendung wählen und warum?
