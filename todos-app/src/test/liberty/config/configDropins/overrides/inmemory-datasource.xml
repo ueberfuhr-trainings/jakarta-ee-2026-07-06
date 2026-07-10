@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+
+    <!-- Nur für Integrationstests: überschreibt die in server.xml als Variable
+         hinterlegte DB-URL auf eine reine In-Memory-H2. DB_CLOSE_DELAY=-1 hält
+         die Datenbank für die gesamte JVM-Laufzeit vor, damit Schema und Daten
+         auch dann erhalten bleiben, wenn der Connection-Pool zwischenzeitlich
+         alle Verbindungen schließt. -->
+    <variable name="todos.db.url" value="jdbc:h2:mem:todos;DB_CLOSE_DELAY=-1"/>
+
+</server>
