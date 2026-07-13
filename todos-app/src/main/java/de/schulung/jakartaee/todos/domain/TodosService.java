@@ -3,41 +3,31 @@ package de.schulung.jakartaee.todos.domain;
 import java.util.Collection;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import javax.inject.Inject;
 import javax.validation.Valid;
 
 /**
- * Verwaltet die Todos in der Datenbank. Der {@link EntityManager} wird per
- * {@code @PersistenceContext} bereitgestellt; schreibende Operationen laufen in
- * einer Transaktion.
+ * Fachliche Verwaltung der Todos. Der {@link TodosService} enthält die
+ * Business-Logik (u.a. die Validierung neuer Todos) und delegiert den reinen
+ * Datenzugriff an das {@link TodosDao}. Er kennt dabei nur das Interface, nicht
+ * dessen konkrete (JPA-)Implementierung.
  */
 @ApplicationScoped
 public class TodosService {
 
-    @PersistenceContext
-    private EntityManager em;
+    @Inject
+    private TodosDao todosDao;
 
     public Collection<Todo> getTodos() {
-        return em
-        		.createQuery("SELECT t FROM Todo t", Todo.class)
-                .getResultList();
+        return todosDao.findAll();
     }
 
     public Collection<Todo> getTodos(String search) {
-        return em
-        		.createQuery(
-        				"SELECT t FROM Todo t WHERE LOWER(t.title) LIKE :search", 
-        				Todo.class
-        			)
-                .setParameter("search", "%" + search.toLowerCase() + "%")
-                .getResultList();
+        return todosDao.findByTitleContains(search);
     }
 
-    @Transactional
     public void addTodo(@Valid Todo todo) {
-        em.persist(todo);
+        todosDao.save(todo);
     }
 
     /**
@@ -45,9 +35,7 @@ public class TodosService {
      * Anwendung zu entscheiden, ob Beispieldaten angelegt werden müssen.
      */
     public long count() {
-        return em
-        		.createQuery("SELECT COUNT(t) FROM Todo t", Long.class)
-                .getSingleResult();
+        return todosDao.count();
     }
 
 }
