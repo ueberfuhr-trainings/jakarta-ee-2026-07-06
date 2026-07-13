@@ -31,3 +31,4 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | Nr. | Übung                                                                     |
 |-----|---------------------------------------------------------------------------|
 | 01  | [Schichtenarchitektur](./03-clean-architecture/01-schichtenarchitektur/issue.md) |
+| 02  | [Eigenes Datenmodell je Schicht](./03-clean-architecture/02-datenmodelle-je-schicht/issue.md) |
