@@ -24,3 +24,4 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | 06        | [Bean Validation – Custom Constraints](./02-jakarta-ee/06-custom-constraints/issue.md) |
 | Reflexion | [Lernstandskontrolle (Quiz)](reflection/quiz-week1.html)                               |
 | 07        | [Datenbankzugriff mit JPA](./02-jakarta-ee/07-jpa/issue.md)                            |
+| 08        | [Integrationstests der HTTP-Schnittstelle](./02-jakarta-ee/08-integrationstests/issue.md) |
