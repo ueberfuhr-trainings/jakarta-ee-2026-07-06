@@ -1,4 +1,4 @@
-package de.schulung.jakartaee.todos;
+package de.schulung.jakartaee.todos.domain;
 
 /**
  * Der Bearbeitungsstand eines {@link Todo}.

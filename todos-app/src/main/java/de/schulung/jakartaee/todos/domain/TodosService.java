@@ -1,4 +1,4 @@
-package de.schulung.jakartaee.todos;
+package de.schulung.jakartaee.todos.domain;
 
 import java.util.Collection;
 
