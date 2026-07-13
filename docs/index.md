@@ -25,3 +25,9 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | Reflexion | [Lernstandskontrolle (Quiz)](reflection/quiz-week1.html)                               |
 | 07        | [Datenbankzugriff mit JPA](./02-jakarta-ee/07-jpa/issue.md)                            |
 | 08        | [Integrationstests der HTTP-Schnittstelle](./02-jakarta-ee/08-integrationstests/issue.md) |
+
+## Clean Code / Clean Architecture
+
+| Nr. | Übung                                                                     |
+|-----|---------------------------------------------------------------------------|
+| 01  | [Schichtenarchitektur](./03-clean-architecture/01-schichtenarchitektur/issue.md) |
