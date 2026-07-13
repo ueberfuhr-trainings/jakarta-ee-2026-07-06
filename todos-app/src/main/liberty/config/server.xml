@@ -52,6 +52,9 @@
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
+    <!-- Von EclipseLink (JPA) abgesetzte SQL-Statements auf die Konsole loggen -->
+    <logging traceSpecification="eclipselink.sql=all" traceFileName="stdout"/>
+
     <!-- Configures the application on a specified context root -->
     <webApplication contextRoot="/todos-app" location="todos-app.war" />
 
