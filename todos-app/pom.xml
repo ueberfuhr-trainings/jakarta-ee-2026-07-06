@@ -28,6 +28,12 @@
 		    <version>1.2.6</version>
 		    <scope>provided</scope>
 		</dependency>
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.200</version>
+		    <scope>provided</scope>
+		</dependency>
         <!--
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
@@ -59,6 +65,20 @@
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
+                <configuration>
+                    <copyDependencies>
+                        <dependencyGroup>
+                            <location>${project.build.directory}/liberty/wlp/usr/shared/resources</location>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                            </dependency>
+                        </dependencyGroup>
+                    </copyDependencies>
+                    <bootstrapProperties>
+                        <todos.db.dir>${project.basedir}/.localdb</todos.db.dir>
+                    </bootstrapProperties>
+                </configuration>
             </plugin>
         </plugins>
     </build>

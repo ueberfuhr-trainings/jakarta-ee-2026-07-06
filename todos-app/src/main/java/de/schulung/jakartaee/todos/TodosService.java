@@ -1,51 +1,53 @@
 package de.schulung.jakartaee.todos;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 /**
- * Verwaltet die Todos. Vorerst nur eine In-Memory-Collection mit
- * Beispieldaten und einem Getter zum Auslesen.
+ * Verwaltet die Todos in der Datenbank. Der {@link EntityManager} wird per
+ * {@code @PersistenceContext} bereitgestellt; schreibende Operationen laufen in
+ * einer Transaktion.
  */
 @ApplicationScoped
 public class TodosService {
 
-    private final Collection<Todo> todos = new ArrayList<>();
-
-    public TodosService() {
-    	this.addTodo(
-    			new Todo()
-    				.setTitle("Einkaufen gehen")
-    				.setDescription("Milch, Brot und Butter besorgen")
-    				.setDueDate(LocalDate.of(2026, 7, 10))
-    		);
-    	this.addTodo(
-        		new Todo()
-        			.setTitle("Übung vorbereiten")
-        			.setDescription("Servlet-Übung für die Schulung fertigstellen")
-        			.setDueDate(LocalDate.of(2026, 7, 8))
-        			.setStatus(TodoStatus.IN_ARBEIT)
-        	);
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     public Collection<Todo> getTodos() {
-        return todos;
+        return em
+        		.createQuery("SELECT t FROM Todo t", Todo.class)
+                .getResultList();
     }
-    
+
     public Collection<Todo> getTodos(String search) {
-    	return todos
-    			.stream()
-    			.filter(todo -> todo.getTitle().toLowerCase().contains(search.toLowerCase()))
-    			.collect(Collectors.toList());
+        return em
+        		.createQuery(
+        				"SELECT t FROM Todo t WHERE LOWER(t.title) LIKE :search", 
+        				Todo.class
+        			)
+                .setParameter("search", "%" + search.toLowerCase() + "%")
+                .getResultList();
     }
-    
+
+    @Transactional
     public void addTodo(@Valid Todo todo) {
-    	todos.add(todo);
+        em.persist(todo);
+    }
+
+    /**
+     * Liefert die Anzahl der gespeicherten Todos. Nützlich, um beim Start der
+     * Anwendung zu entscheiden, ob Beispieldaten angelegt werden müssen.
+     */
+    public long count() {
+        return em
+        		.createQuery("SELECT COUNT(t) FROM Todo t", Long.class)
+                .getSingleResult();
     }
 
 }
