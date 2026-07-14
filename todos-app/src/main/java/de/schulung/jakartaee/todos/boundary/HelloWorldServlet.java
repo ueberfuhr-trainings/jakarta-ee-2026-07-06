@@ -1,4 +1,6 @@
-package de.schulung.jakartaee.todos;
+package de.schulung.jakartaee.todos.boundary;
+
+import de.schulung.jakartaee.todos.domain.HelloMessage;
 
 import java.io.IOException;
 import java.io.PrintWriter;

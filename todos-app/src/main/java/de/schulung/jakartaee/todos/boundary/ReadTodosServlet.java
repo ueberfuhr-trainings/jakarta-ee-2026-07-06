@@ -1,4 +1,7 @@
-package de.schulung.jakartaee.todos;
+package de.schulung.jakartaee.todos.boundary;
+
+import de.schulung.jakartaee.todos.domain.Todo;
+import de.schulung.jakartaee.todos.domain.TodosService;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
