@@ -19,10 +19,15 @@
         <fileset dir="${shared.resource.dir}" includes="h2-*.jar"/>
     </library>
 
-    <!-- Dateibasierte H2-Datenbank im Projektordner .localdb -->
+    <!-- DB-URL als Variable: Default ist die dateibasierte H2 im Projektordner
+         .localdb. Die Integrationstests überschreiben diese Variable über eine
+         configDropins/overrides-Datei auf eine In-Memory-Datenbank. -->
+    <variable name="todos.db.url"
+              defaultValue="jdbc:h2:file:${todos.db.dir}/todos;AUTO_SERVER=TRUE"/>
+
     <dataSource id="todosDS" jndiName="jdbc/todos">
         <jdbcDriver libraryRef="h2"/>
-        <properties URL="jdbc:h2:file:${todos.db.dir}/todos;AUTO_SERVER=TRUE" user="sa" password="sa"/>
+        <properties URL="${todos.db.url}" user="sa" password="sa"/>
     </dataSource>
 
     <!-- This template enables security. To get the full use of all the capabilities, a keystore and user registry are required. -->

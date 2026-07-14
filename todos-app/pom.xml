@@ -13,6 +13,9 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- HTTP-Port, unter dem Liberty die App bereitstellt (siehe server.xml).
+             Wird den Integrationstests als System-Property übergeben. -->
+        <liberty.http.port>9080</liberty.http.port>
     </properties>
 
     <dependencies>
@@ -43,6 +46,20 @@
             <scope>provided</scope>
         </dependency>
         -->
+
+        <!-- Integrationstests: HTTP-Aufrufe gegen den laufenden Liberty -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.5.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -62,6 +79,33 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- Spielt den In-Memory-Override VOR liberty:start (pre-integration-test)
+                 in den Server. liberty:create läuft bereits in prepare-package, die
+                 Kopie danach überlebt also. Deklaration VOR dem liberty-maven-plugin,
+                 damit sie in pre-integration-test vor 'start' greift. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-it-server-config</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/liberty/wlp/usr/servers/defaultServer/configDropins/overrides</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/test/liberty/config/configDropins/overrides</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
@@ -79,6 +123,82 @@
                         <todos.db.dir>${project.basedir}/.localdb</todos.db.dir>
                     </bootstrapProperties>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>create-server</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>create</goal>
+                            <goal>install-feature</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>deploy-and-start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-server</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Entfernt den In-Memory-Override nach den Tests wieder aus dem
+                 Server-Verzeichnis, damit ihn ein späterer liberty:start (oder ein
+                 Start aus der IDE) NICHT erbt und weiterhin die dateibasierte
+                 .localdb nutzt. Deklaration NACH dem liberty-maven-plugin, damit das
+                 Löschen erst nach liberty:stop passiert. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.3.2</version>
+                <executions>
+                    <execution>
+                        <id>remove-it-server-config</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.build.directory}/liberty/wlp/usr/servers/defaultServer/configDropins/overrides</directory>
+                                    <includes>
+                                        <include>inmemory-datasource.xml</include>
+                                    </includes>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Führt die Integrationstests (*IT) gegen den laufenden Liberty aus -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <liberty.http.port>${liberty.http.port}</liberty.http.port>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
