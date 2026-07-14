@@ -53,7 +53,7 @@ die Schichten können sich unabhängig voneinander entwickeln.
 
 * [Martin Fowler: Data Transfer Object](https://martinfowler.com/eaaCatalog/dataTransferObject.html) — Zweck und Einsatz von DTOs
 * [Baeldung: The DTO Pattern](https://www.baeldung.com/java-dto-pattern) — DTOs und Mapping in Java
-* [Baeldung: Entity To DTO Conversion](https://www.baeldung.com/java-entity-to-and-from-dto-for-a-java-spring-application) — Mapping von Hand vs. mit Framework
+* [Martin Fowler: Local DTO](https://martinfowler.com/bliki/LocalDTO.html) — wann sich (lokale) DTOs und das Mapping lohnen – und wann nicht
 * [Robert C. Martin: A Little Architecture](https://blog.cleancoder.com/uncle-bob/2016/01/04/ALittleArchitecture.html) — warum Details (DB, UI) nicht ins Zentrum gehören
 
 ## 🤔 Reflexionsfragen
