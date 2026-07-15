@@ -47,6 +47,17 @@ public class JpaTodosDao implements TodosDao {
     }
 
     @Override
+    @Transactional
+    public boolean deleteById(long id) {
+        TodoEntity entity = em.find(TodoEntity.class, id);
+        if (entity == null) {
+            return false;
+        }
+        em.remove(entity);
+        return true;
+    }
+
+    @Override
     public long count() {
         return em
                 .createQuery("SELECT COUNT(t) FROM TodoEntity t", Long.class)
