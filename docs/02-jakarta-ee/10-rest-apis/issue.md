@@ -47,7 +47,7 @@ und `TodoDto`. Zum Prüfen legst Du ein Todo per REST an und schaust in der
    > `jaxrs-2.1` bringt auch JSON-B (`jsonb-1.0`) mit – damit werden Deine Objekte automatisch von/zu JSON umgewandelt.
 2. **`Application`-Klasse anlegen**, die den Basispfad der API auf `/api` setzt (ohne sie werden die Ressourcen nicht registriert):
    ```java
-   package de.schulung.jakartaee.todos;
+   package de.schulung.jakartaee.todos.boundary;
 
    import javax.ws.rs.ApplicationPath;
    import javax.ws.rs.core.Application;

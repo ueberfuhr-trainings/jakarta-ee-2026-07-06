@@ -89,7 +89,7 @@ sie grün sind.
    ```xml
    <feature>mpOpenAPI-2.0</feature>
    ```
-   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt.
+   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt. Schau Dir dabei über die Developer Tools im Browser auch die Requests und Responses an.
 6. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
@@ -104,5 +104,6 @@ sie grün sind.
 
 * Was ist der Unterschied zwischen den Statuscodes `200`, `201` und `204`?
 * Warum liefert ein Zugriff auf ein nicht vorhandenes Todo `404` – und nicht z.B. `200` mit leerem Body?
+* Welchen Statuscode liefert  `GET /api/todos`, wenn keine Todos vorhanden sind?
 * Warum ist `DELETE` idempotent und `POST` nicht? Was bedeutet das für einen Client, der einen Aufruf (z.B. nach einem Timeout) wiederholt?
 * Könnten wir die REST-API auch ohne JAX-RS, also rein mit Servlets implementieren?
