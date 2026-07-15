@@ -1,34 +1,39 @@
 ---
 layout: default
-title: REST APIs mit JAX-RS
+title: REST API – Todos anlegen (POST)
 ---
 
-# REST APIs mit JAX-RS
+# REST API – Todos anlegen (POST)
 
 Bisher spricht die Anwendung mit dem Browser über Servlets und JSPs – die
 Antwort ist fertiges HTML. Moderne Clients (z.B. Single Page Applications oder
 mobile Apps) wollen aber lieber **Daten** (JSON) statt HTML und sprechen den
-Server über eine **REST-API** an. In dieser Übung stellst Du die Todos zusätzlich
-als REST-Ressourcen bereit: Todos **auslesen** (alle und einzeln) und **löschen**
-– optional auch **anlegen**. Dafür nutzt Du **JAX-RS** (Jakarta REST), lässt die
-JSON-Umwandlung automatisch über **JSON-B** erledigen und testest die Endpunkte
-mit **curl** und **REST-Assured**.
+Server über eine **REST-API** an. In dieser Übung baust Du den ersten Endpunkt:
+das **Anlegen** eines Todos per `POST`. Dafür nutzt Du **JAX-RS** (Jakarta REST)
+und lässt die JSON-Umwandlung automatisch über **JSON-B** erledigen.
+
+Der `POST`-Endpunkt und der `TodosService` sind als **Vorlage vorgegeben**;
+selbst schreiben musst Du das **`TodoDto`** und den **Mapper** zwischen `Todo`
+und `TodoDto`. Zum Prüfen legst Du ein Todo per REST an und schaust in der
+**klassischen UI** (`/todos-app/todos`) nach, ob es dort erscheint.
+
+> Die weiteren Endpunkte (Todos auslesen und löschen) folgen in der nächsten
+> Übung.
 
 ## 🎯 Lernziele
 
 * Du verstehst, was eine REST-API ausmacht: Ressourcen als URLs, HTTP-Methoden für Operationen, Statuscodes als Ergebnis.
-* Du kannst mit JAX-RS eine `Application`-Klasse und Ressourcen-Klassen erstellen und Objekte automatisch als JSON ausliefern.
-* Du kannst passende HTTP-Methoden und Statuscodes für die Operationen wählen (auslesen, löschen, anlegen).
-* Du kannst eine HTTP-API mit `curl` und mit REST-Assured testen.
+* Du kannst mit JAX-RS eine `Application`-Klasse und eine Ressourcen-Klasse erstellen und Objekte automatisch als JSON austauschen.
+* Du kannst ein DTO mit Mapper einsetzen, um die interne Datenstruktur nicht direkt nach außen zu geben.
+* Du kannst die Eingabe per Bean Validation (`@Valid`) am Endpunkt prüfen lassen.
 
 ## ✅ Definition of Done
 
 * [ ] Das JAX-RS-Feature ist in Liberty aktiv und es existiert eine `Application`-Klasse mit dem Basispfad `/api`.
-* [ ] `GET /api/todos` liefert alle Todos als JSON.
-* [ ] `GET /api/todos/{id}` liefert ein einzelnes Todo als JSON – bzw. `404`, wenn es das Todo nicht gibt.
-* [ ] `DELETE /api/todos/{id}` löscht ein Todo.
-* [ ] *(optional)* `POST /api/todos` legt ein neues Todo an und liefert `201 Created`.
-* [ ] Für die Endpunkte existieren REST-Assured-Tests, die grün laufen.
+* [ ] Du hast ein `TodoDto` (mit read-only `id`) und einen Mapper (`Todo` ↔ `TodoDto`) geschrieben.
+* [ ] `POST /api/todos` legt ein Todo an und liefert `201 Created` mit `Location`-Header und dem angelegten Todo im Body.
+* [ ] Ungültige Eingaben werden per `@Valid` mit `400` abgelehnt.
+* [ ] Das per REST angelegte Todo erscheint in der klassischen UI unter `/todos-app/todos`.
 * [ ] Ihr habt die Reflexionsfragen schriftlich beantwortet.
 
 ## 🪜 Arbeitsschritte
@@ -53,130 +58,138 @@ mit **curl** und **REST-Assured**.
    ```
    Alle Ressourcen liegen damit unter `.../todos-app/api/...`.
 
-### Teil 2: Todos auslesen
+### Teil 2: Vorlage – Anlegen (`POST`)
 
-3. **Ressourcen-Klasse `TodosResource` anlegen.** Sie bündelt die Endpunkte unter dem Pfad `todos` und liefert JSON:
+Der `POST`-Endpunkt ist **vorgegeben**. Studiere ihn – er zeigt Dir das Muster
+(Ressource, HTTP-Methode, Validierung, Mapper-Nutzung). Den `TodosService` für
+den Datenzugriff gibt es im Projekt bereits.
+
+3. **`TodosResource` mit `POST`-Endpunkt** (vorgegeben):
    ```java
    @Path("todos")
    @Produces(MediaType.APPLICATION_JSON)
-   public class TodosResource {
-   
-       // Abhängigkeiten?
-   
-       @GET
-       public Collection<TodoDto> findTodos() {
-           // ...
-       }
-
-       @GET
-       @Path("{id}")
-       public TodoDto findTodo(@PathParam("id") long id) {
-           // ... (Todo suchen und zurückgeben)
-           // für 404: throw new NotFoundException();
-       }
-   }
-   ```
-    > Die Klasse `TodoDto` repräsentiert die Daten, die an den Client gesendet werden sollen. Sie enthält nur die notwendigen Attribute mit Gettern und Settern (POJO).
-
-    > Die Objekte werden automatisch als JSON serialisiert. Eine eigene Serialisierung musst Du nicht schreiben.
-
-### Teil 3: Todos löschen
-
-4. **`DELETE`-Endpunkt** ergänzen. Ohne Rückgabewert antwortet JAX-RS mit `204 No Content`:
-   ```java
-   @DELETE
-   @Path("{id}")
-   public void delete(@PathParam("id") long id) {
-       // ... (Todo per ID löschen)
-       // 404, falls nicht gefunden.
-   }
-   ```
-   > Überlege: Warum passt gerade `DELETE` (und nicht `POST` oder `GET`) zu dieser Operation?
-
-### Teil 4: Todos anlegen (optional)
-
-5**`POST`-Endpunkt** ergänzen, der ein Todo aus dem JSON-Body entgegennimmt, anlegt und `201 Created` samt `Location`-Header der neuen Ressource zurückgibt:
-   ```java
-   @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public Response create(TodoDto todo, @Context UriInfo uriInfo) {
-       // ... (Todo anlegen/speichern)
-       // Response:
-       // - 201 Created
-       // - Location-Header: "/api/todos/{id}"
-       // - Todo mit ID im Body 
-       return Response
-                 .created(/* URI */)
-                 .entity(responseTodo)
-                 .build();
+   public class TodosResource {
+
+       @Inject
+       TodosService todosService;
+       @Inject
+       TodoMapper mapper;          // <-- schreibst Du in Teil 3
+
+       @POST
+       public Response create(@Valid TodoDto dto, @Context UriInfo uriInfo) {
+           Todo created = todosService.addTodo(mapper.toDomain(dto));
+           URI location = uriInfo.getAbsolutePathBuilder()
+                   .path(String.valueOf(created.getId()))
+                   .build();
+           return Response.created(location)
+                   .entity(mapper.toDto(created))
+                   .build();
+       }
    }
    ```
+   > `@Valid` am Parameter sorgt dafür, dass das `TodoDto` vor dem Methodenrumpf validiert wird; bei Verstößen antwortet JAX-RS automatisch mit `400`. Die Validierungsconstraints kannst Du direkt an das `TodoDto` schreiben (siehe Teil 3).
 
-### Teil 5: Testen mit curl (Git Bash)
+**Was der Endpunkt auf HTTP-Ebene leisten muss** (Informationsmaterial): Ein
+Client legt ein Todo an, indem er die Daten als JSON per `POST` an die
+Sammel-Ressource `/api/todos` schickt. Der Server legt das Todo an und antwortet
+mit `201 Created`, einem `Location`-Header auf die neue Einzel-Ressource und dem
+angelegten Todo (jetzt mit `id`) im Body.
 
-6.**Endpunkte mit `curl` ausprobieren** (Kontextpfad `/todos-app`, API-Basis `/api`):
+*Anfrage:*
+```http
+POST /todos-app/api/todos HTTP/1.1
+Host: localhost:9080
+Content-Type: application/json
+
+{
+  "title": "Einkaufen gehen",
+  "description": "Milch, Brot und Butter besorgen",
+  "dueDate": "2026-07-20"
+}
+```
+
+*Antwort:*
+```http
+HTTP/1.1 201 Created
+Location: http://localhost:9080/todos-app/api/todos/42
+Content-Type: application/json
+
+{
+  "id": 42,
+  "title": "Einkaufen gehen",
+  "description": "Milch, Brot und Butter besorgen",
+  "dueDate": "2026-07-20",
+  "status": "ready"
+}
+```
+
+Merkmale, die die Vorlage umsetzt:
+* **Methode & Pfad:** `POST` auf die Sammel-Ressource `/api/todos` (nicht auf eine Einzel-Ressource – die `id` entsteht ja erst beim Anlegen).
+* **Anfrage-Body:** das zu erstellende Todo als JSON; `Content-Type: application/json`. Die `id` wird **nicht** mitgeschickt.
+* **Status:** `201 Created` (nicht `200`), weil eine neue Ressource entstanden ist.
+* **`Location`-Header:** die URL der neu angelegten Einzel-Ressource, unter der sie später per `GET` abrufbar sein wird.
+* **Antwort-Body:** das angelegte Todo inklusive der vom Server vergebenen `id`.
+
+### Teil 3: `TodoDto` und Mapper selbst schreiben
+
+4. **`TodoDto`** anlegen – ein einfaches POJO mit den Attributen, die über die API übertragen werden (z.B. `id`, `title`, `description`, `dueDate`, `status`), mit Gettern und Settern. So gibst Du nicht die interne `Todo`-Klasse direkt nach außen.
+   - **Validierung:** Die Constraints darfst Du direkt an das `TodoDto` schreiben (z.B. `@NotNull`/`@Title` am `title`). Zusammen mit `@Valid` am Endpunkt (Teil 2) werden ungültige Anfragen mit `400` abgelehnt.
+   - **`id` ist read-only:** Sie erscheint in den Antworten, wird beim Anlegen aber **nicht** vom Client mitgeschickt. In JSON-B erreichst Du das, indem Du **den Setter** von `id` mit `@JsonbTransient` annotierst:
+     ```java
+     private Long id;
+
+     public Long getId() {        // Getter ohne Annotation -> id wird serialisiert (Antwort)
+         return id;
+     }
+
+     @JsonbTransient              // nur der Setter -> id wird beim Deserialisieren (Anfrage) ignoriert
+     public void setId(Long id) {
+         this.id = id;
+     }
+     ```
+     > Wichtig: `@JsonbTransient` gehört an den **Setter**, nicht an das Feld – am Feld würde die `id` aus **beiden** Richtungen verschwinden (also auch aus der Antwort). Der Mapper kann `setId(...)` als normalen Java-Aufruf weiter nutzen; `@JsonbTransient` wirkt nur auf JSON-B.
+5. **Mapper** anlegen, der beide Richtungen beherrscht (die Vorlage braucht beide):
+   - `Todo` → `TodoDto` (für die Ausgabe),
+   - `TodoDto` → `Todo` (für das Anlegen).
+   > Ob Du den Mapper als CDI-Bean (`@ApplicationScoped`, injizierbar) oder als einfache Klasse baust, bleibt Dir überlassen – die Vorlage injiziert ihn per `@Inject`.
+
+### Teil 4: Prüfen über die klassische UI
+
+6. **Anlegen per REST und in der UI prüfen.** Lege ein Todo per `POST` an (z.B. mit `curl` in der Git Bash) und öffne anschließend die bestehende Anzeige unter [http://localhost:9080/todos-app/todos](http://localhost:9080/todos-app/todos) – das neue Todo muss dort auftauchen.
    ```bash
-   # alle Todos
-   curl -i http://localhost:9080/todos-app/api/todos
-
-   # ein einzelnes Todo (hier id = 1)
-   curl -i http://localhost:9080/todos-app/api/todos/1
-
-   # nicht vorhandenes Todo -> 404
-   curl -i http://localhost:9080/todos-app/api/todos/9999
-
-   # ein Todo löschen -> 204
-   curl -i -X DELETE http://localhost:9080/todos-app/api/todos/1
-
-   # (optional) ein Todo anlegen -> 201
+   # anlegen -> 201 mit Location-Header
    curl -i -X POST http://localhost:9080/todos-app/api/todos \
      -H "Content-Type: application/json" \
      -d '{"title":"Neues Todo","description":"per REST angelegt","dueDate":"2026-07-20"}'
+
+   # ungültige Eingabe (zu kurzer Titel) -> 400
+   curl -i -X POST http://localhost:9080/todos-app/api/todos \
+     -H "Content-Type: application/json" \
+     -d '{"title":"Ab"}'
    ```
    > `-i` zeigt die Antwort inklusive Statuszeile und Header (z.B. den `Location`-Header beim Anlegen).
 
-### Teil 6: Testen mit REST-Assured
+### Teil 5 (optional): Todo-Status-Werte über JSON steuern
 
-7. **Integrationstests schreiben** (REST-Assured ist im Projekt bereits konfiguriert). Prüfe mindestens:
-   - `GET /api/todos` → Status `200`, Content-Type JSON,
-   - `GET /api/todos/{id}` für ein vorhandenes Todo → `200` und der erwartete Titel im JSON,
-   - `GET /api/todos/{id}` für eine unbekannte `id` → `404`,
-   - `DELETE /api/todos/{id}` → `204`, danach liefert `GET` derselben `id` ein `404`.
-   ```java
-   @BeforeAll
-   static void setup() {
-       RestAssured.baseURI = "http://localhost";
-       RestAssured.port = Integer.getInteger("liberty.http.port", 9080);
-       RestAssured.basePath = "/todos-app/api";
-   }
-
-   @Test
-   void listReturnsJson() {
-       given()
-           .when().get("/todos")
-           .then().statusCode(200).contentType(ContentType.JSON);
-   }
-   ```
-
-### Teil 7: Swagger UI (optional)
-
-8. **MicroProfile OpenAPI aktivieren**, um die API im Browser zu erkunden und zu testen:
-   ```xml
-   <feature>mpOpenAPI-2.0</feature>
-   ```
-   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt. 
-9. Beantwortet gemeinsam die Reflexionsfragen.
+7. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
+   - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
+   - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
+   - Validierung soll nur diese 3 Werte erlauben
+8. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
 
 * [Jakarta REST (JAX-RS): Specification](https://jakarta.ee/specifications/restful-ws/) — die JAX-RS-Spezifikation
 * [Open Liberty: Creating a RESTful web service (Guide)](https://openliberty.io/guides/rest-intro.html) — JAX-RS in Liberty end-to-end
-* [Baeldung: JAX-RS Basics](https://www.baeldung.com/jax-rs-spec-and-implementations) — Überblick über JAX-RS
 * [Jakarta JSON Binding (JSON-B)](https://jakarta.ee/specifications/jsonb/) — automatische JSON-Serialisierung
-* [Open Liberty: Documenting RESTful APIs (MicroProfile OpenAPI)](https://openliberty.io/guides/microprofile-openapi.html) — Swagger UI und OpenAPI
+* [Sebastian Daschner: JSON-B Asymmetrical Property Binding](https://blog.sebastian-daschner.com/entries/jsonb-asymmetrical-property-binding) — read-only/write-only mit `@JsonbTransient`
+* [Baeldung: Bean Validation in JAX-RS](https://www.baeldung.com/jersey-bean-validation) — `@Valid` an Endpunkten
 * [MDN: HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) — Semantik von GET, POST, PUT, PATCH, DELETE
 
 ## 🤔 Reflexionsfragen
 
-* Was ist der Unterschied zwischen den Statuscodes `200`, `201` und `204`?
-* Könnten wir die REST-API auch ohne JAX-RS, also rein mit Servlets implementieren?
+* Warum antwortet das Anlegen mit `201 Created` und nicht mit `200 OK`? Wozu dient der `Location`-Header?
+* Warum geben wir nicht direkt die interne `Todo`-Klasse nach außen, sondern ein eigenes `TodoDto`?
+* Warum ist es sinnvoll, die `id` als read-only zu behandeln? Was könnte passieren, wenn ein Client sie beim Anlegen mitschicken dürfte?
+* Wo findet die Validierung statt, und was passiert bei einem Verstoß (Statuscode)?
