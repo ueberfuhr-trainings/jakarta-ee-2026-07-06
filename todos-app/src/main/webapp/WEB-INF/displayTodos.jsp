@@ -23,6 +23,10 @@
 		                <c:if test="${not empty todo.dueDate}">
 		                    (bis <c:out value="${todo.dueDate}"/>)
 		                </c:if>
+		                <form method="post" action="delete-todo" style="display:inline">
+		                    <input type="hidden" name="id" value="${todo.id}"/>
+		                    <button type="submit" title="Todo löschen">🗑️ Löschen</button>
+		                </form>
 		            </li>
 		        </c:forEach>
 		    </ul>

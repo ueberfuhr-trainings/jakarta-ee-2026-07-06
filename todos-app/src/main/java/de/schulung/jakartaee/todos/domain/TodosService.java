@@ -30,6 +30,10 @@ public class TodosService {
         todosDao.save(todo);
     }
 
+    public boolean deleteTodo(long id) {
+        return todosDao.deleteById(id);
+    }
+
     /**
      * Liefert die Anzahl der gespeicherten Todos. Nützlich, um beim Start der
      * Anwendung zu entscheiden, ob Beispieldaten angelegt werden müssen.

@@ -23,6 +23,14 @@ public interface TodosDao {
 
     void save(Todo todo);
 
+    /**
+     * Löscht das Todo mit der angegebenen {@code id}.
+     *
+     * @return {@code true}, wenn ein Todo gelöscht wurde, sonst {@code false}
+     *         (es gab kein Todo mit dieser {@code id}).
+     */
+    boolean deleteById(long id);
+
     default long count() {
         return findAll().size();
     }
