@@ -122,6 +122,12 @@
                     <bootstrapProperties>
                         <todos.db.dir>${project.basedir}/.localdb</todos.db.dir>
                     </bootstrapProperties>
+                    <!-- liberty:dev NICHT die Integrationstests ausführen lassen: Sonst
+                         durchläuft dev beim Start die Phase pre-integration-test und
+                         kopiert dabei den In-Memory-Override in den (auch von dev
+                         genutzten) defaultServer -> dev liefe fälschlich In-Memory.
+                         Die IT laufen weiterhin über 'mvn verify' (Failsafe). -->
+                    <skipITs>true</skipITs>
                 </configuration>
                 <executions>
                     <execution>
