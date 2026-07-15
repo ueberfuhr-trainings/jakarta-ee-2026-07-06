@@ -11,15 +11,12 @@ selbstständig um das **Löschen**: In der Todo-Liste soll zu jedem Todo ein
 **Löschen-Button bzw. -Symbol** erscheinen, mit dem sich genau dieses Todo
 entfernen lässt.
 
-Diese Übung gibt Dir bewusst **keine Arbeitsschritte** vor. Nutze, was Du bisher
-gelernt hast (Anzeige per JSP, Servlets, Service/Datenzugriff), und finde selbst
-einen Weg. Es gibt mehr als eine richtige Lösung.
+Diese Übung gibt Dir bewusst **keine Arbeitsschritte** vor. Nutze, was Du bisher gelernt hast und finde selbst einen Lösungsweg.
 
 ## 🎯 Lernziele
 
 * Du kannst eine neue Funktion eigenständig über alle beteiligten Teile der Anwendung (Anzeige, Servlet, Datenhaltung) hinzufügen.
-* Du festigst das Zusammenspiel von JSP, Servlet und der Verwaltung der Todos.
-* Du triffst bewusst eine Entscheidung, wie die Löschaktion vom Browser zum Server gelangt.
+* Du festigst das bisher Gelernte und reflektierst, was Du bereits kannst und wo noch Defizite bestehen.
 
 ## ✅ Definition of Done
 
