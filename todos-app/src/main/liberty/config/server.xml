@@ -9,6 +9,9 @@
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
         <feature>jpa-2.2</feature>
+        <feature>jaxrs-2.1</feature>
+        <!-- stellt unter /openapi/ui eine Swagger UI bereit -->
+        <feature>mpOpenAPI-2.0</feature>
         <!--
         <feature>microProfile-4.1</feature>
         -->

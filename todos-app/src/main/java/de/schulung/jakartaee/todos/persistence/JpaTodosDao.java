@@ -43,7 +43,13 @@ public class JpaTodosDao implements TodosDao {
     @Override
     @Transactional
     public void save(Todo todo) {
-        em.persist(mapper.toEntity(todo));
+        TodoEntity entity = mapper.toEntity(todo);
+        em.persist(entity);
+        // flush erzwingt das INSERT, damit die generierte id verfügbar ist
+        // (sonst führt EclipseLink das INSERT erst beim Commit aus).
+        em.flush();
+        // generierte id in das übergebene Todo zurückschreiben
+        todo.setId(entity.getId());
     }
 
     @Override
