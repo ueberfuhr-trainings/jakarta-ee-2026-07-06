@@ -2,42 +2,32 @@ package de.schulung.jakartaee.todos.domain;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 /**
  * Ein einzelnes Todo mit Titel, Beschreibung, Fälligkeitsdatum und Status.
+ *
+ * <p>Reines Domänenmodell: keine Persistenz- oder Transport-Details, nur die
+ * fachlichen Regeln (Bean Validation). Die Persistenz nutzt ein eigenes
+ * {@code TodoEntity}, die Web-Schicht ein eigenes {@code TodoDto}; die Umwandlung
+ * übernehmen Mapper in den jeweiligen Schichten.</p>
  */
-@Entity(name = "Todo")
-@Table(name = "TODOS")
 public class Todo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
     private Long id;
 
-	@NotNull
-	@Title
-    @Column(name = "TITLE", nullable = false, length = 100)
+    @NotNull
+    @Title
     private String title;
-    @Column(name = "DESCRIPTION", length = 1000)
+
     private String description;
+
     @FutureOrPresent
     @MaximumFuture(3)
-    @Column(name = "DUE_DATE")
     private LocalDate dueDate;
+
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS", nullable = false, length = 20)
     private TodoStatus status = TodoStatus.ERSTELLT;
 
     public Todo() {
@@ -45,6 +35,11 @@ public class Todo {
 
     public Long getId() {
         return id;
+    }
+
+    public Todo setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public String getTitle() {
