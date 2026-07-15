@@ -43,11 +43,12 @@ und `TodoDto`. Zum Prüfen legst Du ein Todo per REST an und schaust in der
 1. **Feature in der `server.xml` ergänzen:**
    ```xml
    <feature>jaxrs-2.1</feature>
+   <!-- Object/JSON-Mapping -->
+   <feature>jsonb-1.0</feature>
    ```
-   > `jaxrs-2.1` bringt auch JSON-B (`jsonb-1.0`) mit – damit werden Deine Objekte automatisch von/zu JSON umgewandelt.
 2. **`Application`-Klasse anlegen**, die den Basispfad der API auf `/api` setzt (ohne sie werden die Ressourcen nicht registriert):
    ```java
-   package de.schulung.jakartaee.todos.boundary;
+   package de.schulung.jakartaee.todos.boundary.rest;
 
    import javax.ws.rs.ApplicationPath;
    import javax.ws.rs.core.Application;
@@ -78,7 +79,8 @@ den Datenzugriff gibt es im Projekt bereits.
 
        @POST
        public Response create(@Valid TodoDto dto, @Context UriInfo uriInfo) {
-           Todo created = todosService.addTodo(mapper.toDomain(dto));
+           Todo todo = mapper.toDomain(dto);
+           todosService.addTodo(todo);   // setzt die generierte id in todo
            URI location = uriInfo.getAbsolutePathBuilder()
                    .path(String.valueOf(created.getId()))
                    .build();
@@ -134,24 +136,24 @@ Merkmale, die die Vorlage umsetzt:
 ### Teil 3: `TodoDto` und Mapper selbst schreiben
 
 4. **`TodoDto`** anlegen – ein einfaches POJO mit den Attributen, die über die API übertragen werden (z.B. `id`, `title`, `description`, `dueDate`, `status`), mit Gettern und Settern. So gibst Du nicht die interne `Todo`-Klasse direkt nach außen.
-   - **Validierung:** Die Constraints darfst Du direkt an das `TodoDto` schreiben (z.B. `@NotNull`/`@Title` am `title`). Zusammen mit `@Valid` am Endpunkt (Teil 2) werden ungültige Anfragen mit `400` abgelehnt.
-   - **`id` ist read-only:** Sie erscheint in den Antworten, wird beim Anlegen aber **nicht** vom Client mitgeschickt. In JSON-B erreichst Du das, indem Du **den Setter** von `id` mit `@JsonbTransient` annotierst:
-     ```java
-     private Long id;
-
-     public Long getId() {        // Getter ohne Annotation -> id wird serialisiert (Antwort)
-         return id;
-     }
-
-     @JsonbTransient              // nur der Setter -> id wird beim Deserialisieren (Anfrage) ignoriert
-     public void setId(Long id) {
-         this.id = id;
-     }
-     ```
-     > Wichtig: `@JsonbTransient` gehört an den **Setter**, nicht an das Feld – am Feld würde die `id` aus **beiden** Richtungen verschwinden (also auch aus der Antwort). Der Mapper kann `setId(...)` als normalen Java-Aufruf weiter nutzen; `@JsonbTransient` wirkt nur auf JSON-B.
+    - **Validierung:** Die Constraints darfst Du direkt an das `TodoDto` schreiben (z.B. `@NotNull`/`@Title` am `title`). Zusammen mit `@Valid` am Endpunkt (Teil 2) werden ungültige Anfragen mit `400` abgelehnt.
+    - **`id` ist read-only:** Sie erscheint in den Antworten, wird beim Anlegen aber **nicht** vom Client mitgeschickt. In JSON-B erreichst Du das, indem Du **den Setter** von `id` mit `@JsonbTransient` annotierst:
+      ```java
+      private Long id;
+ 
+      public Long getId() {        // Getter ohne Annotation -> id wird serialisiert (Antwort)
+          return id;
+      }
+ 
+      @JsonbTransient              // nur der Setter -> id wird beim Deserialisieren (Anfrage) ignoriert
+      public void setId(Long id) {
+          this.id = id;
+      }
+      ```
+      > Wichtig: `@JsonbTransient` gehört an den **Setter**, nicht an das Feld – am Feld würde die `id` aus **beiden** Richtungen verschwinden (also auch aus der Antwort). Der Mapper kann `setId(...)` als normalen Java-Aufruf weiter nutzen; `@JsonbTransient` wirkt nur auf JSON-B.
 5. **Mapper** anlegen, der beide Richtungen beherrscht (die Vorlage braucht beide):
-   - `Todo` → `TodoDto` (für die Ausgabe),
-   - `TodoDto` → `Todo` (für das Anlegen).
+    - `Todo` → `TodoDto` (für die Ausgabe),
+    - `TodoDto` → `Todo` (für das Anlegen).
    > Ob Du den Mapper als CDI-Bean (`@ApplicationScoped`, injizierbar) oder als einfache Klasse baust, bleibt Dir überlassen – die Vorlage injiziert ihn per `@Inject`.
 
 ### Teil 4: Prüfen über die klassische UI
@@ -170,21 +172,13 @@ Merkmale, die die Vorlage umsetzt:
    ```
    > `-i` zeigt die Antwort inklusive Statuszeile und Header (z.B. den `Location`-Header beim Anlegen).
 
-### Teil 5: Swagger UI (optional)
+### Teil 5 (optional): Todo-Status-Werte über JSON steuern
 
-7. **MicroProfile OpenAPI aktivieren**, um die API im Browser zu erkunden und zu testen:
-   ```xml
-   <feature>mpOpenAPI-2.0</feature>
-   ```
-   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt. Schau Dir dabei über die Developer Tools im Browser auch die Requests und Responses an.
-
-### Teil 6 (optional): Todo-Status-Werte über JSON steuern
-
-8. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
-   - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
-   - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
-   - Validierung soll nur diese 3 Werte erlauben
-9. Beantwortet gemeinsam die Reflexionsfragen.
+7. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
+    - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
+    - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
+    - Validierung soll nur diese 3 Werte erlauben
+8. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
 
@@ -193,7 +187,6 @@ Merkmale, die die Vorlage umsetzt:
 * [Jakarta JSON Binding (JSON-B)](https://jakarta.ee/specifications/jsonb/) — automatische JSON-Serialisierung
 * [Sebastian Daschner: JSON-B Asymmetrical Property Binding](https://blog.sebastian-daschner.com/entries/jsonb-asymmetrical-property-binding) — read-only/write-only mit `@JsonbTransient`
 * [Baeldung: Bean Validation in JAX-RS](https://www.baeldung.com/jersey-bean-validation) — `@Valid` an Endpunkten
-* [Open Liberty: Documenting RESTful APIs (MicroProfile OpenAPI)](https://openliberty.io/guides/microprofile-openapi.html) — Swagger UI und OpenAPI
 * [MDN: HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) — Semantik von GET, POST, PUT, PATCH, DELETE
 
 ## 🤔 Reflexionsfragen
