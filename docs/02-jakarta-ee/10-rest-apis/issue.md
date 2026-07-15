@@ -170,13 +170,21 @@ Merkmale, die die Vorlage umsetzt:
    ```
    > `-i` zeigt die Antwort inklusive Statuszeile und Header (z.B. den `Location`-Header beim Anlegen).
 
-### Teil 5 (optional): Todo-Status-Werte über JSON steuern
+### Teil 5: Swagger UI (optional)
 
-7. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
+7. **MicroProfile OpenAPI aktivieren**, um die API im Browser zu erkunden und zu testen:
+   ```xml
+   <feature>mpOpenAPI-2.0</feature>
+   ```
+   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt. Schau Dir dabei über die Developer Tools im Browser auch die Requests und Responses an.
+
+### Teil 6 (optional): Todo-Status-Werte über JSON steuern
+
+8. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
    - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
    - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
    - Validierung soll nur diese 3 Werte erlauben
-8. Beantwortet gemeinsam die Reflexionsfragen.
+9. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
 
@@ -185,6 +193,7 @@ Merkmale, die die Vorlage umsetzt:
 * [Jakarta JSON Binding (JSON-B)](https://jakarta.ee/specifications/jsonb/) — automatische JSON-Serialisierung
 * [Sebastian Daschner: JSON-B Asymmetrical Property Binding](https://blog.sebastian-daschner.com/entries/jsonb-asymmetrical-property-binding) — read-only/write-only mit `@JsonbTransient`
 * [Baeldung: Bean Validation in JAX-RS](https://www.baeldung.com/jersey-bean-validation) — `@Valid` an Endpunkten
+* [Open Liberty: Documenting RESTful APIs (MicroProfile OpenAPI)](https://openliberty.io/guides/microprofile-openapi.html) — Swagger UI und OpenAPI
 * [MDN: HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) — Semantik von GET, POST, PUT, PATCH, DELETE
 
 ## 🤔 Reflexionsfragen

@@ -83,21 +83,13 @@ sie grün sind.
    ```
    > `-i` zeigt die Antwort inklusive Statuszeile und Header.
 
-### Teil 4: Swagger UI (optional)
-
-5. **MicroProfile OpenAPI aktivieren**, um die API im Browser zu erkunden und zu testen:
-   ```xml
-   <feature>mpOpenAPI-2.0</feature>
-   ```
-   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt. Schau Dir dabei über die Developer Tools im Browser auch die Requests und Responses an.
-6. Beantwortet gemeinsam die Reflexionsfragen.
+5. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
 
 * [Jakarta REST (JAX-RS): Specification](https://jakarta.ee/specifications/restful-ws/) — die JAX-RS-Spezifikation
 * [Open Liberty: Creating a RESTful web service (Guide)](https://openliberty.io/guides/rest-intro.html) — JAX-RS in Liberty end-to-end
 * [Baeldung: JAX-RS Basics](https://www.baeldung.com/jax-rs-spec-and-implementations) — Überblick über JAX-RS
-* [Open Liberty: Documenting RESTful APIs (MicroProfile OpenAPI)](https://openliberty.io/guides/microprofile-openapi.html) — Swagger UI und OpenAPI
 * [MDN: HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods) — Semantik von GET, POST, PUT, PATCH, DELETE
 
 ## 🤔 Reflexionsfragen
