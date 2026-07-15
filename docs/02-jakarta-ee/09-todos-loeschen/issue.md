@@ -41,3 +41,4 @@ wir besprechen sie zu Beginn der folgenden Übung.
   * **DELETE**
 * Was bedeutet im Zusammenhang mit diesen HTTP-Methoden der Begriff _Idempotenz_?
 * Was sind **Single Page Applications (SPAs)**, und welche Anforderungen stellen sie an eine HTTP-Schnittstelle?
+* Was ist Content Negotiation?

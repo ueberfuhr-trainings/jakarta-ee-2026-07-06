@@ -26,6 +26,7 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | 07           | [Datenbankzugriff mit JPA](./02-jakarta-ee/07-jpa/issue.md)                               |
 | 08           | [Integrationstests der HTTP-Schnittstelle](./02-jakarta-ee/08-integrationstests/issue.md) |
 | Wiederholung | [Todos löschen](./02-jakarta-ee/09-todos-loeschen/issue.md)                               |
+| 09           | [REST APIs mit JAX-RS](./02-jakarta-ee/10-rest-apis/issue.md)                             |
 
 ## Clean Code / Clean Architecture
 
