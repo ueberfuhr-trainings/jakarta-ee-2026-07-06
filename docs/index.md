@@ -28,6 +28,7 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | Wiederholung | [Todos löschen](./02-jakarta-ee/09-todos-loeschen/issue.md)                               |
 | 09           | [REST API – Todos anlegen (POST)](./02-jakarta-ee/10-rest-apis/issue.md)                  |
 | 10           | [REST API – Todos auslesen und löschen](./02-jakarta-ee/11-rest-apis-lesen-loeschen/issue.md) |
+| 11           | [Konfiguration mit MicroProfile Config](./02-jakarta-ee/12-microprofile-config/issue.md)  |
 
 ## Clean Code / Clean Architecture
 
