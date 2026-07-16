@@ -20,7 +20,6 @@
     <properties>
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <liberty.http.port>9090</liberty.http.port>
         <spring.version>5.3.39</spring.version>
         <spring-data.version>2.7.18</spring-data.version>
         <hibernate.version>5.6.15.Final</hibernate.version>
@@ -91,7 +90,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Integrationstests: HTTP-Aufrufe gegen den laufenden Liberty -->
+        <!-- Tests: Spring TestContext (SpringExtension) + MockMvc, in-JVM (ohne Boot, ohne Liberty) -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -99,9 +98,23 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>4.5.1</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- json-path fuer die jsonPath(...)-Matcher von MockMvc -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Hamcrest wird von den MockMvc-Matchern (ResultMatcher-Signaturen) benoetigt -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -127,7 +140,6 @@
                     <bootstrapProperties>
                         <todos.db.dir>${project.basedir}/.localdb</todos.db.dir>
                     </bootstrapProperties>
-                    <skipITs>true</skipITs>
                 </configuration>
                 <executions>
                     <execution>
@@ -136,40 +148,6 @@
                         <goals>
                             <goal>create</goal>
                             <goal>install-feature</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>deploy-and-start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop-server</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <liberty.http.port>${liberty.http.port}</liberty.http.port>
-                    </systemPropertyVariables>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -9,6 +9,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
+import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -40,7 +42,24 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public LocalValidatorFactoryBean validator() {
-        return new LocalValidatorFactoryBean();
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        // ParameterMessageInterpolator statt der EL-basierten Default-Interpolation:
+        // Unsere Constraint-Messages nutzen nur Parameter ({value}/{unit}), keine
+        // EL-Ausdruecke. So braucht die Validierung keine EL-Engine - das haelt sie
+        // unabhaengig vom Server und laufffaehig auch in reinen In-JVM-Tests.
+        validator.setMessageInterpolator(new ParameterMessageInterpolator());
+        return validator;
+    }
+
+    /**
+     * Verwendet denselben Validator auch für die {@code @Valid}-Prüfung von
+     * {@code @RequestBody} in Spring MVC. Ohne diese Verdrahtung würde
+     * {@code @EnableWebMvc} einen eigenen (EL-basierten) Default-Validator
+     * anlegen, der ohne EL-Engine still zur No-op-Prüfung würde.
+     */
+    @Override
+    public Validator getValidator() {
+        return validator();
     }
 
     /** Statische Ressourcen (index.html) an den Default-Servlet weiterreichen. */
