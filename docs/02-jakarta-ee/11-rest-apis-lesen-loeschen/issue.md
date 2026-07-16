@@ -35,9 +35,13 @@ sie grün sind.
 
 ## 🪜 Arbeitsschritte
 
-### Teil 1: Auslesen (`GET`)
+### Teil 1: Test Driven Development
 
-1. **`GET`-Endpunkte** in der `TodosResource` ergänzen – alle Todos und ein einzelnes per `id`:
+1. **Bereitgestellte Tests nutzen.** Hol Dir die per Pull Request bereitgestellten REST-Assured-Tests ins Projekt und führe sie mit `mvn verify` aus. Implementiere in den folgenden Schritten so lange, bis alle Tests erfolgreich durchlaufen.
+
+### Teil 2: Auslesen (`GET`)
+
+2. **`GET`-Endpunkte** in der `TodosResource` ergänzen – alle Todos und ein einzelnes per `id`:
    ```java
    @GET
    public Collection<TodoDto> findAll() {
@@ -52,9 +56,9 @@ sie grün sind.
    ```
    > Die Ausgabe erfolgt wie beim Anlegen über den Mapper (`Todo` → `TodoDto`).
 
-### Teil 2: Löschen (`DELETE`)
+### Teil 3: Löschen (`DELETE`)
 
-2. **`DELETE`-Endpunkt** ergänzen. Ohne Rückgabewert antwortet JAX-RS mit `204 No Content`:
+3. **`DELETE`-Endpunkt** ergänzen. Ohne Rückgabewert antwortet JAX-RS mit `204 No Content`:
    ```java
    @DELETE
    @Path("{id}")
@@ -64,10 +68,9 @@ sie grün sind.
    ```
    > Überlege: Warum passt gerade `DELETE` (und nicht `POST` oder `GET`) zu dieser Operation?
 
-### Teil 3: Testen (test-driven & mit curl)
+### Teil 4: Manuelles Testen (optional)
 
-3. **Bereitgestellte Tests nutzen.** Hol Dir die per Pull Request bereitgestellten REST-Assured-Tests ins Projekt und führe sie mit `mvn verify` aus. Implementiere so lange, bis alle grün sind.
-4. **Zwischendurch mit `curl` prüfen** (Kontextpfad `/todos-app`, API-Basis `/api`), z.B. in der Git Bash:
+4. **Prüfe mit der Swagger UI sowie mit `curl`**, z.B. in der Git Bash:
    ```bash
    # alle Todos
    curl -i http://localhost:9080/todos-app/api/todos
