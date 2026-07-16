@@ -1,6 +1,7 @@
 package de.schulung.jakartaee.todos.persistence;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -50,6 +51,13 @@ public class JpaTodosDao implements TodosDao {
         em.flush();
         // generierte id in das übergebene Todo zurückschreiben
         todo.setId(entity.getId());
+    }
+
+    @Override
+    public Optional<Todo> findById(long id) {
+        // em.find nutzt den Primärschlüssel-Zugriff der DB statt findAll() zu filtern
+        return Optional.ofNullable(em.find(TodoEntity.class, id))
+                .map(mapper::toDomain);
     }
 
     @Override
