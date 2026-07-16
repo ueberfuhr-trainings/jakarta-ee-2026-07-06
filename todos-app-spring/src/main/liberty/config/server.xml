@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="todos-spring-server">
+
+    <!-- Nur der Servlet-/JSP-Container wird von Liberty gebraucht. Alles Weitere
+         (DI, REST, JPA/Transaktionen, Validierung) bringt Spring selbst mit -
+         daher KEINE cdi-/jaxrs-/jpa-/mpConfig-Features wie in der Jakarta-EE-App. -->
+    <featureManager>
+        <feature>servlet-4.0</feature>
+        <feature>jsp-2.3</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9090"
+                  httpsPort="9443" />
+
+    <!-- WAR automatisch entpacken -->
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="/todos-app-spring" location="todos-app-spring.war" />
+
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+</server>
