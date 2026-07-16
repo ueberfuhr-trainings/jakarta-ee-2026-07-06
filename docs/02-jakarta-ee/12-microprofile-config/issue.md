@@ -131,8 +131,5 @@ Anwendung neu zu bauen.
 
 ## 🤔 Reflexionsfragen
 
-* Warum ist es sinnvoll, Verhalten wie das Anlegen von Beispieldaten über Konfiguration zu steuern, statt es fest im Code (oder über das Löschen der Klasse) zu regeln? Welche Umgebungen (Dev, Test, Prod) profitieren wie davon?
-* Wofür ist der `defaultValue` bei `@ConfigProperty` gut? Was passiert beim Start, wenn eine Property **ohne** `defaultValue` nirgends gesetzt ist?
-* Welche Config-Quellen kennt MicroProfile Config, und in welcher Rangfolge (Ordinal) werden sie ausgewertet? Warum ist diese Rangfolge nützlich?
-* `@ConfigProperty` sieht aus wie eine CDI-Injection – woher stammt es tatsächlich, und was macht MicroProfile Config zusätzlich zur reinen Injection (Stichwort Typkonvertierung)?
-* Wie unterscheidet sich MicroProfile Config von den Liberty-eigenen `<variable>`-Einträgen in der `server.xml` (wie bei der Datenbank-URL)? Wann würdest Du was einsetzen?
+* Warum ist es sinnvoll, Verhalten wie das Anlegen von Beispieldaten über Konfiguration zu steuern?
+* Wiederhole noch einmal den Begriff _Convention over Configuration_ und erkläre am Beispiel dieser Übung nochmal, wo Standardwerte gesetzt und überschrieben werden können.
