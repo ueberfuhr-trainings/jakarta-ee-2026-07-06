@@ -179,12 +179,15 @@ Merkmale, die die Vorlage umsetzt:
     - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
     - Validierung soll nur diese 3 Werte erlauben
 
-### Teil 6 (optional): Todo-Status-Werte über JSON steuern
+### Teil 6: Swagger UI (optional)
 
-8. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
-    - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
-    - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
-    - Validierung soll nur diese 3 Werte erlauben
+8. **MicroProfile OpenAPI aktivieren**, um die API im Browser zu erkunden und zu testen:
+   ```xml
+   <feature>mpOpenAPI-2.0</feature>
+   ```
+   Danach findest Du unter [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui) eine **Swagger UI**, die Deine Endpunkte automatisch auflistet und ausprobieren lässt. Schau Dir dabei über die Developer Tools im Browser auch die Requests und Responses an.
+
+
 9. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
