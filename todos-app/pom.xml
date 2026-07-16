@@ -37,15 +37,15 @@
 		    <version>1.4.200</version>
 		    <scope>provided</scope>
 		</dependency>
-        <!--
+        <!-- MicroProfile Config (Teil der MicroProfile-4.1-Plattform, passt zu
+             mpConfig-2.0 in der server.xml). Nur die API wird zur Compile-Zeit
+             gebraucht; die Implementierung liefert Open Liberty. -->
         <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <version>4.1</version>
-            <type>pom</type>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
-        -->
 
         <!-- Integrationstests: HTTP-Aufrufe gegen den laufenden Liberty -->
         <dependency>

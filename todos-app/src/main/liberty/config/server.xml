@@ -12,6 +12,8 @@
         <feature>jaxrs-2.1</feature>
         <!-- stellt unter /openapi/ui eine Swagger UI bereit -->
         <feature>mpOpenAPI-2.0</feature>
+        <!-- MicroProfile Config: @ConfigProperty / Config-API -->
+        <feature>mpConfig-2.0</feature>
         <!--
         <feature>microProfile-4.1</feature>
         -->
