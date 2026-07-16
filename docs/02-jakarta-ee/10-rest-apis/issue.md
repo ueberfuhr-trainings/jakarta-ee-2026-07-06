@@ -178,7 +178,14 @@ Merkmale, die die Vorlage umsetzt:
     - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
     - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
     - Validierung soll nur diese 3 Werte erlauben
-8. Beantwortet gemeinsam die Reflexionsfragen.
+
+### Teil 6 (optional): Todo-Status-Werte über JSON steuern
+
+8. Der interne `TodoStatus` heißt `ERSTELLT` / `IN_ARBEIT` / `FERTIG`. Über die API sollen aber die Werte **`ready`**, **`in_progress`** und **`done`** übertragen werden – in **beide** Richtungen (Request und Response). Löse das im DTO/Mapper, z.B.:
+    - `status` im `TodoDto` als `String` führen und im Mapper beide Richtungen übersetzen (`"ready"` ↔ `ERSTELLT`, `"in_progress"` ↔ `IN_ARBEIT`, `"done"` ↔ `FERTIG`),
+    - unbekannte/leere Werte sinnvoll behandeln (z.B. Default `ready`).
+    - Validierung soll nur diese 3 Werte erlauben
+9. Beantwortet gemeinsam die Reflexionsfragen.
 
 ## 📚 Selbstlernmaterial
 
