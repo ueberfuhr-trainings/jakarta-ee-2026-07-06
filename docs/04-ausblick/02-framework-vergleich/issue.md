@@ -103,9 +103,10 @@ vorgegebener Fragen die Gemeinsamkeiten und Unterschiede heraus.
       - In allen dreien Bean Validation (`@NotNull`, das Composite-Constraint `@Title`, das eigene `@MaximumFuture`) am `TodoDto` bzw. am Domänenmodell.
       - Vergleiche: Wo steht `@Valid`? Wie kommt der Fehler zum `400`? Was ist gleich, was ist der Namespace-Unterschied (`javax.validation` vs. `jakarta.validation`)?
    3. **Wie sehen Datenbankzugriffe aus?**
-      - Jakarta EE: JPA direkt über den `EntityManager` – `persistence/JpaTodosDao.java`.
-      - Spring: **Spring Data JPA** – `persistence/TodoRepository.java` (Interface `extends JpaRepository`, Methoden werden generiert).
-      - Quarkus: **Panache mit Repository-Ansatz** – `persistence/TodoRepository.java` (`implements PanacheRepository<TodoEntity>`).
+      - Jakarta EE: Domänen-Interface `domain/TodosDao.java`, implementiert in `persistence/JpaTodosDao.java` mit dem `EntityManager`.
+      - Spring: **dieselbe Schichtung** – Domänen-Interface `domain/TodosDao.java`, implementiert in `persistence/JpaTodosDao.java`; dort wird aber ein **Spring-Data-JPA-Repository** (`persistence/TodoRepository.java`, Interface `extends JpaRepository`, Methoden werden generiert) statt eines `EntityManager` genutzt.
+      - Quarkus: **Panache mit Repository-Ansatz** – `persistence/TodoRepository.java` (`implements PanacheRepository<TodoEntity>`), genutzt vom Service.
+      - Vergleiche: In Jakarta EE und Spring definiert die **Domäne** das DAO-Interface (Dependency Inversion), die Persistenz liefert die Implementierung; bei Quarkus greift der Service direkt auf das Panache-Repository zu.
    4. **Wo stehen die Konfigurationen?**
       - Jakarta EE: `src/main/liberty/config/server.xml` (Features, DataSource), `src/main/resources/META-INF/persistence.xml` (Persistence-Unit), `META-INF/microprofile-config.properties`.
       - Spring: Java-Konfiguration (`config/PersistenceConfig.java`, `config/WebConfig.java`, `config/WebAppInitializer.java`) + `application.properties`; die `server.xml` ist minimal (nur Servlet/JSP).
