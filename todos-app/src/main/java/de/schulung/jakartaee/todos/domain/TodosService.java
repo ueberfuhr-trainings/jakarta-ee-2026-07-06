@@ -1,6 +1,7 @@
 package de.schulung.jakartaee.todos.domain;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +25,10 @@ public class TodosService {
 
     public Collection<Todo> getTodos(String search) {
         return todosDao.findByTitleContains(search);
+    }
+
+    public Optional<Todo> getTodo(long id) {
+        return todosDao.findById(id);
     }
 
     public void addTodo(@Valid Todo todo) {

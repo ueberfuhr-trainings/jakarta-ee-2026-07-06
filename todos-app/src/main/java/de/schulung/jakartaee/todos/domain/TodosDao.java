@@ -2,6 +2,7 @@ package de.schulung.jakartaee.todos.domain;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +31,19 @@ public interface TodosDao {
      *         (es gab kein Todo mit dieser {@code id}).
      */
     boolean deleteById(long id);
+
+    /**
+     * Liefert das Todo mit der angegebenen {@code id}, sofern vorhanden.
+     *
+     * @return das gefundene Todo oder {@link Optional#empty()}, wenn es kein
+     *         Todo mit dieser {@code id} gibt.
+     */
+    default Optional<Todo> findById(long id) {
+        return findAll()
+                .stream()
+                .filter(todo -> todo.getId() != null && todo.getId() == id)
+                .findFirst();
+    }
 
     default long count() {
         return findAll().size();
