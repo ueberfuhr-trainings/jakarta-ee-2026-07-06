@@ -120,9 +120,6 @@ Beantwortet anschließend gemeinsam die Reflexionsfragen.
 
 ## 🤔 Reflexionsfragen
 
-* Bei welchen Kriterien der Tabelle ähneln sich die Projekte am stärksten, bei welchen unterscheiden sie sich am deutlichsten? Woran liegt das?
-* Jakarta EE und Quarkus nutzen beide JAX-RS und Bean Validation. Was ist der auffälligste Unterschied im Code – und was hat es mit `javax.*` vs. `jakarta.*` auf sich?
-* Vergleiche Datenzugriff über den `EntityManager` (Jakarta EE) mit Spring Data JPA und Panache-Repository: Wie viel Code musst Du jeweils selbst schreiben, und was übernimmt das Framework?
-* In der Jakarta-EE-App ist die Konfiguration über mehrere Dateien verteilt (`server.xml`, `persistence.xml`, `microprofile-config.properties`), bei Quarkus steht fast alles in einer `application.properties`. Welche Vor- und Nachteile hat das jeweils?
-* Warum lässt sich die Spring-App auf demselben Open Liberty betreiben wie die Jakarta-EE-App, obwohl sie „kein Jakarta EE" ist? Was bringt Spring selbst mit (DI, MVC, Transaktionsklammer), und was übernimmt weiterhin der Server – insbesondere: Spring holt sich die JPA-`EntityManagerFactory` und die DataSource per JNDI vom Liberty. Welche Vor-/Nachteile hat das gegenüber einer von Spring selbst verwalteten DataSource?
-* Die Quarkus-Variante verzichtet auf eine server-gerenderte JSP-Oberfläche. Warum passt das zu einem modernen, API-orientierten Ansatz – und wie würde man eine UI heute typischerweise anbinden?
+* Bei welchen Kriterien der Tabelle ähneln sich die Projekte am stärksten, bei welchen unterscheiden sie sich am deutlichsten?
+* Was bedeutet _Single File Configuration_? In welchem der 3 Projekte liegt diese vor?
+* Bei welchem der Projekte muss für die Tests der Liberty gestartet werden?
