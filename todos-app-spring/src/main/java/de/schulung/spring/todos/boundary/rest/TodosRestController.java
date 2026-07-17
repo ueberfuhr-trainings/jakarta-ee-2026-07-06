@@ -22,24 +22,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import de.schulung.spring.todos.domain.Todo;
 import de.schulung.spring.todos.domain.TodosService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * REST-Ressource für Todos unter {@code /api/todos}. Umgesetzt mit Spring MVC
  * ({@code @RestController}). Bietet Anlegen ({@code POST}), Auslesen aller und
  * einzelner Todos ({@code GET}) sowie Löschen ({@code DELETE}). Ein- und Ausgabe
  * erfolgen als JSON (Jackson); die Umwandlung zwischen {@link Todo} und
- * {@link TodoDto} übernimmt der {@link TodoDtoMapper}.
+ * {@link TodoDto} übernimmt der {@link TodoDtoMapper}. Den Konstruktor für die
+ * {@code final}-Felder erzeugt Lombok ({@code @RequiredArgsConstructor}).
  */
 @RestController
 @RequestMapping("/api/todos")
+@RequiredArgsConstructor
 public class TodosRestController {
 
     private final TodosService todosService;
     private final TodoDtoMapper mapper;
-
-    public TodosRestController(TodosService todosService, TodoDtoMapper mapper) {
-        this.todosService = todosService;
-        this.mapper = mapper;
-    }
 
     @PostMapping
     public ResponseEntity<TodoDto> create(
