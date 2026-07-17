@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -16,14 +15,16 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * Persistenz-Konfiguration NUR für die Tests (Profil {@code test}): statt der
- * vom Liberty per JNDI bereitgestellten {@code EntityManagerFactory} wird hier
- * eine eigene In-Memory-H2 samt {@code EntityManagerFactory} (Hibernate als
- * Provider) und ein resource-lokaler {@code JpaTransactionManager} in den
- * Spring-Context gebaut. So laufen die Tests komplett in-JVM, ohne Liberty/JNDI.
+ * Test-Konfiguration (ähnlich einer Spring-Boot-{@code @TestConfiguration}):
+ * <em>überschreibt</em> die Persistenz-Beans der {@code LibertyPersistenceConfig}
+ * ({@code entityManagerFactory}, {@code transactionManager}) durch eine eigene
+ * In-Memory-H2 samt {@code EntityManagerFactory} (Hibernate als Provider) und
+ * einen resource-lokalen {@code JpaTransactionManager}. Da diese Config im Test
+ * als Letzte registriert wird, gewinnen ihre gleichnamigen Beans (Bean-Overriding,
+ * in reinem Spring per Default erlaubt); der JNDI-Lookup der Produktionsconfig
+ * läuft damit nie. So laufen die Tests komplett in-JVM, ohne Liberty/JNDI.
  */
 @Configuration
-@Profile("test")
 public class TestPersistenceConfig {
 
     @Bean

@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -27,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.jayway.jsonpath.JsonPath;
 
 import de.schulung.spring.todos.boundary.WebConfig;
+import de.schulung.spring.todos.persistence.LibertyPersistenceConfig;
 import de.schulung.spring.todos.persistence.PersistenceConfig;
 
 /**
@@ -34,18 +34,21 @@ import de.schulung.spring.todos.persistence.PersistenceConfig;
  * ohne Spring Boot) und {@link MockMvc}. Die Tests laufen in-JVM gegen den echten
  * Spring-Context (Controller, Service, DAO, JPA) – es wird KEIN Liberty gestartet.
  *
- * <p>Die Datenbank wird per {@link TestPropertySource} auf eine In-Memory-H2
- * umgestellt (greift in {@code @Value("${todos.db.url:...}")} der
- * {@code PersistenceConfig}), damit die Tests isoliert und ohne Dateileichen
- * laufen.</p>
+ * <p>Geladen wird die vollständige Produktionskonfiguration (inkl.
+ * {@link LibertyPersistenceConfig}); die zuletzt registrierte
+ * {@link TestPersistenceConfig} <em>überschreibt</em> deren Persistenz-Beans
+ * ({@code entityManagerFactory}, {@code transactionManager}) durch eine
+ * In-Memory-H2. Reines Spring erlaubt dieses Bean-Overriding standardmäßig
+ * (anders als Spring Boot) – die Produktions-Configs bleiben dadurch frei von
+ * Test-Wissen (kein {@code @Profile}).</p>
  */
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ActiveProfiles("test")
 @ContextConfiguration(classes = {
 	AppConfig.class,
 	WebConfig.class,
 	PersistenceConfig.class,
+	LibertyPersistenceConfig.class,
 	TestPersistenceConfig.class
 })
 @TestPropertySource(properties = {

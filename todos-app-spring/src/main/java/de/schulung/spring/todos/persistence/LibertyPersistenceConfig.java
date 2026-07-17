@@ -4,23 +4,23 @@ import javax.persistence.EntityManagerFactory;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 /**
- * Produktions-Persistenz: JPA und DataSource stellt der Open Liberty bereit.
- * Die vom Container verwaltete (JTA-)Persistence-Unit {@code todos} wird über
- * einen {@code persistence-unit-ref} (siehe web.xml) unter
+ * Persistenz: JPA und DataSource stellt der Open Liberty bereit. Die vom
+ * Container verwaltete (JTA-)Persistence-Unit {@code todos} wird über einen
+ * {@code persistence-unit-ref} (siehe web.xml) unter
  * {@code java:comp/env/persistence/todos} ins JNDI gebunden; Spring holt sich
  * die {@link EntityManagerFactory} lediglich per JNDI-Lookup und nutzt den
  * JTA-TransactionManager des Servers.
  *
- * <p>Aktiv in allen Profilen außer {@code test} – im Test übernimmt
- * {@code TestPersistenceConfig} mit einer In-Memory-Datenbank.</p>
+ * <p>Diese Klasse ist frei von Test-Wissen. In den Tests wird sie zwar geladen,
+ * ihre Beans {@code entityManagerFactory}/{@code transactionManager} aber von
+ * {@code TestPersistenceConfig} überschrieben (Bean-Overriding) – der JNDI-Lookup
+ * läuft dort also nie.</p>
  */
 @Configuration
-@Profile("!test")
 public class LibertyPersistenceConfig {
 
     @Bean
