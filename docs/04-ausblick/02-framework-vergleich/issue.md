@@ -37,36 +37,35 @@ vorgegebener Fragen die Gemeinsamkeiten und Unterschiede heraus.
 
 ### Teil 1: Die drei Projekte starten
 
-1. **Jakarta EE – `todos-app`** starten:
-   ```bash
-   cd todos-app
-   mvn liberty:dev
-   ```
-   - UI: [http://localhost:9080/todos-app/todos](http://localhost:9080/todos-app/todos)
-   - REST: `http://localhost:9080/todos-app/api/todos`
-   - Swagger UI: [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui)
-2. **Spring – `todos-app-spring`** starten (Spring als WAR auf demselben Liberty):
-   ```bash
-   cd todos-app-spring
-   mvn liberty:dev
-   ```
-   - UI: [http://localhost:9090/todos-app-spring/todos](http://localhost:9090/todos-app-spring/todos)
-   - REST: `http://localhost:9090/todos-app-spring/api/todos`
-3. **Quarkus – `todos-app-quarkus`** starten:
-   ```bash
-   cd todos-app-quarkus
-   mvn quarkus:dev
-   ```
-   - REST: `http://localhost:8080/api/todos`
-   - Dev UI: [http://localhost:8080/q/dev/](http://localhost:8080/q/dev/)
-   - **Hinweis:** Die Quarkus-Variante enthält **bewusst keine** server-gerenderte HTML-/JSP-Oberfläche – Quarkus setzt nicht mehr auf JSPs (moderne Templating-Engine dort wäre z.B. *Qute*). Du sprichst diese App also nur über die REST-API an.
+Alle drei Projekte laufen bewusst unter **derselben Adresse** – Port **9080** und
+Context-Root **`/todos-app`**. Sie lassen sich deshalb **nicht gleichzeitig**
+betreiben: Starte immer nur **ein** Projekt, sieh es Dir an und **stoppe** es mit
+`Strg+C`, bevor Du das nächste startest.
 
-> Die Ports unterscheiden sich bewusst (9080 / 9090 / 8080), damit Du auch mehrere
-> Projekte gleichzeitig laufen lassen kannst.
+| Kriterium | Jakarta EE (`todos-app`) | Spring (`todos-app-spring`) | Quarkus (`todos-app-quarkus`) |
+|---|---|---|---|
+| Startseite (UI) | [`http://localhost:9080/todos-app/`](http://localhost:9080/todos-app/) | *dieselbe URL* | – (keine UI, nur REST) |
+| REST-API | `http://localhost:9080/todos-app/api/todos` | *dieselbe URL* | *dieselbe URL* |
+| Startbefehl | `mvn liberty:dev` | `mvn liberty:dev` | `mvn quarkus:dev` |
+| Tests ausführen | `mvn verify` (REST-Assured-IT gegen den laufenden Liberty) | `mvn test` (Spring MockMvc, in-JVM) | `mvn test` (`@QuarkusTest`, in-JVM) |
+
+1. **Ein Projekt starten** – je nach Variante eines von:
+   ```bash
+   cd todos-app          && mvn liberty:dev     # Jakarta EE
+   cd todos-app-spring   && mvn liberty:dev     # Spring
+   cd todos-app-quarkus  && mvn quarkus:dev     # Quarkus
+   ```
+2. **Im Browser öffnen:**
+   - Startseite/UI (nur Jakarta EE & Spring): [http://localhost:9080/todos-app/](http://localhost:9080/todos-app/)
+   - REST-API: `http://localhost:9080/todos-app/api/todos`
+   - Jakarta EE zusätzlich – Swagger UI: [http://localhost:9080/openapi/ui](http://localhost:9080/openapi/ui)
+   - Quarkus zusätzlich – Dev UI (die genaue URL zeigt Quarkus beim Start in der Konsole, unter `/q/dev/`)
+   - **Hinweis Quarkus:** enthält **bewusst keine** server-gerenderte HTML-/JSP-Oberfläche – Quarkus setzt nicht mehr auf JSPs (moderne Templating-Engine dort wäre z.B. *Qute*). Du sprichst diese App nur über die REST-API an.
+3. **Zum Wechseln** das laufende Projekt mit `Strg+C` stoppen, dann das nächste starten.
 
 ### Teil 2: Die REST-APIs ausprobieren
 
-4. **Todos anlegen, auslesen und löschen** – dieselben Aufrufe gegen jede API. Beispiel Jakarta EE (Port/Context-Root für Spring bzw. Quarkus entsprechend anpassen):
+4. **Todos anlegen, auslesen und löschen** – exakt **dieselben** Aufrufe funktionieren gegen jede der drei Varianten (gleiche URL, nur ein Projekt läuft):
    ```bash
    # anlegen -> 201 mit Location-Header
    curl -i -X POST http://localhost:9080/todos-app/api/todos \
@@ -87,9 +86,7 @@ vorgegebener Fragen die Gemeinsamkeiten und Unterschiede heraus.
    curl -i -X POST http://localhost:9080/todos-app/api/todos \
      -H "Content-Type: application/json" -d '{"title":"Ab"}'
    ```
-   - Für **Spring**: `http://localhost:9090/todos-app-spring/api/todos`
-   - Für **Quarkus**: `http://localhost:8080/api/todos`
-   - Achte darauf, dass Statuscodes (`201`, `200`, `204`, `400`, `404`) und JSON-Ausgabe (inkl. der Status-Werte `ready`/`in_progress`/`done`) in allen drei Projekten **gleich** sind.
+   - Achte darauf, dass Statuscodes (`201`, `200`, `204`, `400`, `404`) und JSON-Ausgabe (inkl. der Status-Werte `ready`/`in_progress`/`done`) in allen drei Projekten **gleich** sind – obwohl die Frameworks intern völlig unterschiedlich arbeiten.
 
 ### Teil 3: Anhand der Leitfragen vergleichen
 
@@ -97,20 +94,20 @@ vorgegebener Fragen die Gemeinsamkeiten und Unterschiede heraus.
 
    1. **Wie wird die REST-API implementiert?**
       - Jakarta EE: JAX-RS – `boundary/rest/TodosResource.java`, `RestApplication.java` (`@Path`, `@GET/@POST/@DELETE`, `Response`).
-      - Spring: Spring MVC – `boundary/rest/TodosController.java` (`@RestController`, `@GetMapping/@PostMapping/@DeleteMapping`, `ResponseEntity`).
+      - Spring: Spring MVC – `boundary/rest/TodosRestController.java` (`@RestController`, `@GetMapping/@PostMapping/@DeleteMapping`, `ResponseEntity`).
       - Quarkus: JAX-RS (Quarkus REST) – `boundary/rest/TodosResource.java` (`@Path`, wie Jakarta EE, aber im `jakarta.*`-Namespace).
    2. **Wie wird validiert?**
       - In allen dreien Bean Validation (`@NotNull`, das Composite-Constraint `@Title`, das eigene `@MaximumFuture`) am `TodoDto` bzw. am Domänenmodell.
       - Vergleiche: Wo steht `@Valid`? Wie kommt der Fehler zum `400`? Was ist gleich, was ist der Namespace-Unterschied (`javax.validation` vs. `jakarta.validation`)?
    3. **Wie sehen Datenbankzugriffe aus?**
       - Jakarta EE: Domänen-Interface `domain/TodosDao.java`, implementiert in `persistence/JpaTodosDao.java` mit dem `EntityManager`.
-      - Spring: **dieselbe Schichtung** – Domänen-Interface `domain/TodosDao.java`, implementiert in `persistence/JpaTodosDao.java`; dort wird aber ein **Spring-Data-JPA-Repository** (`persistence/TodoRepository.java`, Interface `extends JpaRepository`, Methoden werden generiert) statt eines `EntityManager` genutzt.
+      - Spring: **dieselbe Schichtung** – Domänen-Interface `domain/TodosDao.java`, implementiert in `persistence/JpaTodosDao.java`; dort wird aber ein **Spring-Data-JPA-Repository** (`persistence/TodoRepository.java`, Interface `extends JpaRepository`, Methoden werden generiert) statt eines `EntityManager` genutzt. Die dahinterliegende `EntityManagerFactory` stellt allerdings der Liberty bereit (siehe Konfiguration).
       - Quarkus: **Panache mit Repository-Ansatz** – `persistence/TodoRepository.java` (`implements PanacheRepository<TodoEntity>`), genutzt vom Service.
       - Vergleiche: In Jakarta EE und Spring definiert die **Domäne** das DAO-Interface (Dependency Inversion), die Persistenz liefert die Implementierung; bei Quarkus greift der Service direkt auf das Panache-Repository zu.
    4. **Wo stehen die Konfigurationen?**
       - Jakarta EE: `src/main/liberty/config/server.xml` (Features, DataSource), `src/main/resources/META-INF/persistence.xml` (Persistence-Unit), `META-INF/microprofile-config.properties`.
-      - Spring: Java-Konfiguration (`config/PersistenceConfig.java`, `config/WebConfig.java`, `config/WebAppInitializer.java`) + `application.properties`; die `server.xml` ist minimal (nur Servlet/JSP).
-      - Quarkus: alles gebündelt in `src/main/resources/application.properties` (DataSource, Hibernate, eigene Properties).
+      - Spring: gemischt – Java-Konfiguration (`AppConfig`/`WebAppInitializer` im Wurzelpaket, `boundary/WebConfig.java`, `persistence/PersistenceConfig.java`) + `application.properties`. **JPA und DataSource kommen aber – wie bei Jakarta EE – vom Liberty**: `server.xml` (DataSource `jdbc/todos`) und `persistence.xml`; ein `persistence-unit-ref` in `web.xml` bindet die `EntityManagerFactory` ins JNDI, wo Spring sie in `persistence/LibertyPersistenceConfig.java` abholt.
+      - Quarkus: alles gebündelt in `src/main/resources/application.properties` (Port/Root-Path, DataSource, Hibernate, eigene Properties).
 
 6. Beantwortet gemeinsam die Reflexionsfragen.
 
@@ -129,5 +126,5 @@ vorgegebener Fragen die Gemeinsamkeiten und Unterschiede heraus.
 * Jakarta EE und Quarkus nutzen beide JAX-RS und Bean Validation. Was ist der auffälligste Unterschied im Code – und was hat es mit `javax.*` vs. `jakarta.*` auf sich?
 * Vergleiche Datenzugriff über den `EntityManager` (Jakarta EE) mit Spring Data JPA und Panache-Repository: Wie viel Code musst Du jeweils selbst schreiben, und was übernimmt das Framework?
 * In der Jakarta-EE-App ist die Konfiguration über mehrere Dateien verteilt (`server.xml`, `persistence.xml`, `microprofile-config.properties`), bei Quarkus steht fast alles in einer `application.properties`. Welche Vor- und Nachteile hat das jeweils?
-* Warum lässt sich die Spring-App auf demselben Open Liberty betreiben wie die Jakarta-EE-App, obwohl sie „kein Jakarta EE" ist? Was bringt Spring selbst mit, und was übernimmt weiterhin der Server?
+* Warum lässt sich die Spring-App auf demselben Open Liberty betreiben wie die Jakarta-EE-App, obwohl sie „kein Jakarta EE" ist? Was bringt Spring selbst mit (DI, MVC, Transaktionsklammer), und was übernimmt weiterhin der Server – insbesondere: Spring holt sich die JPA-`EntityManagerFactory` und die DataSource per JNDI vom Liberty. Welche Vor-/Nachteile hat das gegenüber einer von Spring selbst verwalteten DataSource?
 * Die Quarkus-Variante verzichtet auf eine server-gerenderte JSP-Oberfläche. Warum passt das zu einem modernen, API-orientierten Ansatz – und wie würde man eine UI heute typischerweise anbinden?
