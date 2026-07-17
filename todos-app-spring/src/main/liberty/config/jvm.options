@@ -1,3 +1,0 @@
-# Hibernate 5.6 (ByteBuddy) auf neueren JDKs (17+/21): erlaubt das Erzeugen von
-# Proxies/Enhancements fuer noch nicht offiziell unterstuetzte Java-Versionen.
--Dnet.bytebuddy.experimental=true

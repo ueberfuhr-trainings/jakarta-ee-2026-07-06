@@ -9,20 +9,22 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 import de.schulung.spring.todos.boundary.WebConfig;
+import de.schulung.spring.todos.persistence.LibertyPersistenceConfig;
 import de.schulung.spring.todos.persistence.PersistenceConfig;
 
 /**
- * Programmatischer Ersatz für web.xml (Servlet 3.0+): registriert die Spring
- * {@link DispatcherServlet} und bindet sie an {@code /}. Ersetzt damit den
- * Deployment-Descriptor, den man bei klassischem Servlet/JSP oder Jakarta EE
- * teilweise noch pflegt.
+ * Programmatische Registrierung (Servlet 3.0+) der Spring
+ * {@link DispatcherServlet} an {@code /}. Der Deployment-Descriptor web.xml
+ * bleibt daneben nur für den {@code persistence-unit-ref} bestehen, über den
+ * Liberty die JPA-EntityManagerFactory ins JNDI bindet.
  */
 public class WebAppInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(AppConfig.class, WebConfig.class, PersistenceConfig.class);
+        context.register(AppConfig.class, WebConfig.class,
+                PersistenceConfig.class, LibertyPersistenceConfig.class);
 
         DispatcherServlet dispatcherServlet = new DispatcherServlet(context);
         ServletRegistration.Dynamic registration =

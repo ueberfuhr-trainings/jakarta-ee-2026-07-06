@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -40,13 +41,15 @@ import de.schulung.spring.todos.persistence.PersistenceConfig;
  */
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { 
-	AppConfig.class, 
-	WebConfig.class, 
-	PersistenceConfig.class 
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {
+	AppConfig.class,
+	WebConfig.class,
+	PersistenceConfig.class,
+	TestPersistenceConfig.class
 })
 @TestPropertySource(properties = {
-	"todos.db.url=jdbc:h2:mem:todos-test;DB_CLOSE_DELAY=-1"		
+	"todos.db.url=jdbc:h2:mem:todos-test;DB_CLOSE_DELAY=-1"
 })
 class TodosRestTests {
 

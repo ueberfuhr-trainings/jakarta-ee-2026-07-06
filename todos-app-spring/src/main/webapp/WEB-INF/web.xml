@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <!--
+        Die Spring DispatcherServlet-Registrierung passiert programmatisch im
+        WebAppInitializer (Servlet 3.0+). Diese web.xml existiert nur, um die vom
+        Liberty verwaltete JPA-Persistence-Unit "todos" ins JNDI zu binden:
+        Sie ist danach unter java:comp/env/persistence/todos abrufbar und wird von
+        LibertyPersistenceConfig per JNDI-Lookup geholt.
+    -->
+    <persistence-unit-ref>
+        <persistence-unit-ref-name>persistence/todos</persistence-unit-ref-name>
+        <persistence-unit-name>todos</persistence-unit-name>
+    </persistence-unit-ref>
+
+</web-app>

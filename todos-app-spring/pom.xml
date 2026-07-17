@@ -13,8 +13,10 @@
         Vergleichsvariante zur Jakarta-EE-App (../todos-app): dieselbe Fachlichkeit,
         umgesetzt mit dem Spring Framework 5 (OHNE Spring Boot) und als WAR auf
         demselben Open Liberty deployt. Start wie beim Original per 'mvn liberty:dev'.
-        Anders als bei Jakarta EE stehen die technischen Konfigurationen (DataSource,
-        JPA, MVC) hier im Spring-Code (@Configuration) bzw. in application.properties.
+        DI, REST (MVC), Transaktionsklammer und Validierung bringt Spring selbst mit;
+        JPA (persistence.xml) und die DataSource stellt hingegen der Liberty bereit,
+        Spring holt die EntityManagerFactory per JNDI. Im Test (Profil "test") wird
+        stattdessen eine In-Memory-H2 samt eigener EntityManagerFactory verwendet.
     -->
 
     <properties>
@@ -43,11 +45,14 @@
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring-data.version}</version>
         </dependency>
-        <!-- JPA-Provider Hibernate (javax-Namespace, passt zu Spring 5 / Liberty) -->
+        <!-- JPA-Provider Hibernate NUR fuer die Tests: dort baut TestPersistenceConfig
+             eine eigene EntityManagerFactory. In Produktion liefert Liberty die JPA
+             (EclipseLink) per JNDI, daher hier kein Hibernate im WAR. -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Bean Validation (Hibernate Validator) -->
@@ -69,11 +74,14 @@
             <version>2.13.5</version>
         </dependency>
 
-        <!-- H2 wird im WAR mitgeliefert (Spring verwaltet die DataSource selbst) -->
+        <!-- H2-Treiber: in Produktion als Liberty-Shared-Library genutzt (per
+             copyDependencies nach shared/resources kopiert, siehe unten), im Test
+             fuer die In-Memory-DataSource. Daher 'provided' (nicht im WAR). -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.2.224</version>
+            <version>1.4.200</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Vom Server (Liberty) bereitgestellt -->
@@ -81,6 +89,14 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JPA-API (javax.persistence): zur Compile-Zeit noetig, zur Laufzeit vom
+             Liberty (jpa-2.2) bereitgestellt -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -126,10 +142,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
-                <configuration>
-                    <!-- Kein web.xml: DispatcherServlet wird per WebApplicationInitializer registriert -->
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -137,6 +149,17 @@
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>3.12.0</version>
                 <configuration>
+                    <!-- H2-Treiber als Liberty-Shared-Library bereitstellen (fuer die
+                         vom Server verwaltete DataSource jdbc/todos) -->
+                    <copyDependencies>
+                        <dependencyGroup>
+                            <location>${project.build.directory}/liberty/wlp/usr/shared/resources</location>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                            </dependency>
+                        </dependencyGroup>
+                    </copyDependencies>
                     <bootstrapProperties>
                         <todos.db.dir>${project.basedir}/.localdb</todos.db.dir>
                     </bootstrapProperties>

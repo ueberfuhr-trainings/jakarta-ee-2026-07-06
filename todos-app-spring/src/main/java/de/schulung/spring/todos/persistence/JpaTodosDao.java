@@ -42,7 +42,9 @@ public class JpaTodosDao implements TodosDao {
     @Transactional
     public void save(Todo todo) {
         TodoEntity entity = mapper.toEntity(todo);
-        repository.save(entity);
+        // saveAndFlush erzwingt das INSERT sofort, damit die generierte id
+        // verfügbar ist (sonst setzt EclipseLink unter JTA die id erst beim Commit).
+        repository.saveAndFlush(entity);
         // generierte id in das übergebene Todo zurückschreiben
         todo.setId(entity.getId());
     }
