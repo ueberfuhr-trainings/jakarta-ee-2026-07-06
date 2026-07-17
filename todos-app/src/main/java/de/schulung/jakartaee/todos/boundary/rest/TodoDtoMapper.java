@@ -36,6 +36,10 @@ public interface TodoDtoMapper {
     }
 
     default TodoStatus fromApiStatus(String status) {
+        if (status == null) {
+            // MapStruct ruft diese Methode auch bei fehlendem status auf -> Default
+            return TodoStatus.ERSTELLT;
+        }
         switch (status) {
             case "ready":
                 return TodoStatus.ERSTELLT;
