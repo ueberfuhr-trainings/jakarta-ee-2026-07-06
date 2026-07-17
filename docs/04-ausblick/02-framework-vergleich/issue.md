@@ -44,9 +44,10 @@ betreiben: Starte immer nur **ein** Projekt, sieh es Dir an und **stoppe** es mi
 
 | Kriterium       | Jakarta EE (`todos-app`)                                               | Spring (`todos-app-spring`) | Quarkus (`todos-app-quarkus`) |
 |-----------------|------------------------------------------------------------------------|-----------------------------|-------------------------------|
+| JDK-Version     | 8                                                                      | 8                           | 17                            |
+| Startbefehl     | `mvn liberty:dev`                                                      | `mvn liberty:dev`           | `mvn quarkus:dev`             |
 | Startseite (UI) | [`http://localhost:9080/todos-app/`](http://localhost:9080/todos-app/) | *dieselbe URL*              | – (keine UI, nur REST)        |
 | REST-API        | `http://localhost:9080/todos-app/api/todos`                            | *dieselbe URL*              | *dieselbe URL*                |
-| Startbefehl     | `mvn liberty:dev`                                                      | `mvn liberty:dev`           | `mvn quarkus:dev`             |
 | Tests ausführen | `mvn verify`                                                           | `mvn test`                  | `mvn test`                    |
 
 1. **Ein Projekt starten** – je nach Variante eines von:
