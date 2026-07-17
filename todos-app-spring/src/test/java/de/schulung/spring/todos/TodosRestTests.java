@@ -28,6 +28,7 @@ import com.jayway.jsonpath.JsonPath;
 import de.schulung.spring.todos.boundary.WebConfig;
 import de.schulung.spring.todos.persistence.LibertyPersistenceConfig;
 import de.schulung.spring.todos.persistence.PersistenceConfig;
+import de.schulung.spring.todos.persistence.TestPersistenceConfig;
 
 /**
  * Tests der REST-API über die Spring-TestContext-Integration ({@link SpringExtension},
@@ -48,7 +49,6 @@ import de.schulung.spring.todos.persistence.PersistenceConfig;
 	AppConfig.class,
 	WebConfig.class,
 	PersistenceConfig.class,
-	LibertyPersistenceConfig.class,
 	TestPersistenceConfig.class
 })
 @TestPropertySource(properties = {

@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -18,6 +19,7 @@ import io.restassured.response.Response;
  * automatisch auf den Test-Port.
  */
 @QuarkusTest
+@TestTransaction
 class TodosResourceTest {
 
     @Test

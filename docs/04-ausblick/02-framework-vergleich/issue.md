@@ -95,17 +95,16 @@ betreiben: Starte immer nur **ein** Projekt, sieh es Dir an und **stoppe** es mi
 und *Quarkus* erarbeitest Du selbst, indem Du Dir den Code und die
 Konfigurationsdateien der jeweiligen Projekte ansiehst.
 
-| Kriterium | Jakarta EE / Liberty | Spring | Quarkus |
-|---|---|---|---|
-| Verarbeitung von HTTP-Anfragen | Servlets |  |  |
-| Implementierung REST-API | JAX-RS Resource |  |  |
-| JSON-Serialisierung | JSON-B |  |  |
-| Bean Validation verfügbar? | Ja |  |  |
-| Dependency Injection | CDI |  |  |
-| Datenbankzugriffe | JPA EntityManager |  |  |
-| Persistence Provider | EclipseLink |  |  |
-| Integrationstests | `mvn verify`: Liberty mit In-Memory-Datasource |  |  |
-| Konfigurationsdateien | `server.xml`/`.env`, `persistence.xml`, `beans.xml`, `microprofile-config.properties` |  |  |
+| Kriterium                      | Jakarta EE / Liberty                                                                                   | Jakarta EE / Liberty mit Spring-Integration | Quarkus |
+|--------------------------------|--------------------------------------------------------------------------------------------------------|---------------------------------------------|---------|
+| Verarbeitung von HTTP-Anfragen | Servlets                                                                                               |                                             |         |
+| Implementierung REST-API       | JAX-RS Resource                                                                                        |                                             |         |
+| JSON-Serialisierung            | JSON-B                                                                                                 |                                             |         |
+| Bean Validation verfügbar?     | ✅                                                                                                      |                                             |         |
+| Dependency Injection           | CDI                                                                                                    |                                             |         |
+| Datenbankzugriffe              | - JPA (EclipseLink)<br/>- EntityManager                                                                |                                             |         |
+| Integrationstests              | - Phase `integration-test`<br/>- Liberty mit In-Memory-Datasource<br/>- REST-Assured                   |                                             |         |
+| Konfigurationsdateien          | - `server.xml`/`.env`<br/>- `persistence.xml`<br/>- `beans.xml`<br/>- `microprofile-config.properties` |                                             |         |
 
 Beantwortet anschließend gemeinsam die Reflexionsfragen.
 

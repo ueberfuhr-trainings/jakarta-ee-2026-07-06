@@ -1,4 +1,4 @@
-package de.schulung.spring.todos;
+package de.schulung.spring.todos.persistence;
 
 import java.util.Properties;
 
@@ -15,7 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * Test-Konfiguration (ähnlich einer Spring-Boot-{@code @TestConfiguration}):
+ * Test-Konfiguration:
  * <em>überschreibt</em> die Persistenz-Beans der {@code LibertyPersistenceConfig}
  * ({@code entityManagerFactory}, {@code transactionManager}) durch eine eigene
  * In-Memory-H2 samt {@code EntityManagerFactory} (Hibernate als Provider) und
@@ -42,8 +42,7 @@ public class TestPersistenceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
-        emf.setPackagesToScan("de.schulung.spring.todos.persistence");
-
+        emf.setPackagesToScan(TestPersistenceConfig.class.getPackage().getName());
         emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties props = new Properties();

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "de.schulung.spring.todos.persistence")
+@EnableJpaRepositories(basePackageClasses = PersistenceConfig.class)
 public class PersistenceConfig {
 
 }

@@ -14,11 +14,6 @@ import org.springframework.transaction.jta.JtaTransactionManager;
  * {@code java:comp/env/persistence/todos} ins JNDI gebunden; Spring holt sich
  * die {@link EntityManagerFactory} lediglich per JNDI-Lookup und nutzt den
  * JTA-TransactionManager des Servers.
- *
- * <p>Diese Klasse ist frei von Test-Wissen. In den Tests wird sie zwar geladen,
- * ihre Beans {@code entityManagerFactory}/{@code transactionManager} aber von
- * {@code TestPersistenceConfig} überschrieben (Bean-Overriding) – der JNDI-Lookup
- * läuft dort also nie.</p>
  */
 @Configuration
 public class LibertyPersistenceConfig {
