@@ -1,37 +1,26 @@
 package de.schulung.jakartaee.todos.boundary;
 
-import javax.enterprise.context.ApplicationScoped;
+import org.mapstruct.Mapper;
 
 import de.schulung.jakartaee.todos.domain.Todo;
 import de.schulung.jakartaee.todos.domain.TodoStatus;
 
 /**
  * Wandelt das Domänenmodell {@link Todo} in das Anzeige-DTO {@link TodoJspDto}
- * um. Nur diese eine Richtung wird gebraucht (die Anzeige), daher gibt es kein
- * {@code toDomain}. Von Hand geschrieben (kein MapStruct o.Ä.).
+ * um. Nur die Anzeige-Richtung wird gebraucht. Die Implementierung erzeugt
+ * MapStruct; {@code componentModel = "cdi"} macht daraus eine CDI-Bean.
  */
-@ApplicationScoped
-public class TodoJspDtoMapper {
+@Mapper(componentModel = "cdi")
+public interface TodoJspDtoMapper {
 
-    public TodoJspDto toJspDto(Todo todo) {
-        if (todo == null) {
-            return null;
-        }
-        TodoJspDto dto = new TodoJspDto();
-        dto.setId(todo.getId());
-        dto.setTitle(todo.getTitle());
-        dto.setDescription(todo.getDescription());
-        dto.setDueDate(todo.getDueDate());
-        dto.setStatus(mapStatus(todo.getStatus()));
-        return dto;
-    }
+    TodoJspDto toJspDto(Todo todo);
 
     /**
-     * Bildet den Status auf eine Anzeige-Bezeichnung ab. Bewusst per
-     * {@code switch}, nicht über {@link Enum#name()}: So bleibt die Anzeige
-     * unabhängig von den internen Enum-Namen und ist an einer Stelle steuerbar.
+     * Bildet den Status auf eine Anzeige-Bezeichnung ab. MapStruct verwendet
+     * diese Methode automatisch für das Feld {@code status} (TodoStatus →
+     * String) – bewusst per {@code switch}, nicht über {@link Enum#name()}.
      */
-    private String mapStatus(TodoStatus status) {
+    default String mapStatus(TodoStatus status) {
         if (status == null) {
             return null;
         }

@@ -20,23 +20,21 @@ import org.springframework.web.server.ResponseStatusException;
 import de.schulung.spring.todos.domain.Todo;
 import de.schulung.spring.todos.domain.TodosService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Klassische, server-gerenderte UI (Gegenstück zu den Servlets der
  * Jakarta-EE-App), umgesetzt mit Spring MVC. Liefert die Todo-Liste als JSP-View
- * und verarbeitet die Formulare zum Anlegen und Löschen.
+ * und verarbeitet die Formulare zum Anlegen und Löschen. Den Konstruktor für die
+ * {@code final}-Felder erzeugt Lombok ({@code @RequiredArgsConstructor}).
  */
 @Controller
+@RequiredArgsConstructor
 public class TodosController {
 
     private final TodosService todosService;
     private final TodoJspDtoMapper mapper;
     private final Validator validator;
-
-    public TodosController(TodosService todosService, TodoJspDtoMapper mapper, Validator validator) {
-        this.todosService = todosService;
-        this.mapper = mapper;
-        this.validator = validator;
-    }
 
     @GetMapping("/todos")
     public String list(

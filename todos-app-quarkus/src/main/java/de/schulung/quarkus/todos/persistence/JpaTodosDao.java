@@ -10,24 +10,23 @@ import de.schulung.quarkus.todos.domain.TodosDao;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Panache-/JPA-basierte Implementierung von {@link TodosDao}. Nach außen (zur
  * Domäne) spricht sie das Domänenmodell {@link Todo}; intern arbeitet sie mit der
  * {@link TodoEntity} und wandelt über den {@link TodoEntityMapper} um. Der
  * Datenzugriff läuft über das Panache-{@link TodoRepository} – er steckt also in
- * der Persistenzschicht, nicht in der Domäne.
+ * der Persistenzschicht, nicht in der Domäne. Den Konstruktor für die
+ * {@code final}-Felder erzeugt Lombok ({@code @RequiredArgsConstructor}).
  */
 @ApplicationScoped
 @Transactional
+@RequiredArgsConstructor
 public class JpaTodosDao implements TodosDao {
 
     private final TodoRepository repository;
     private final TodoEntityMapper mapper;
-
-    public JpaTodosDao(TodoRepository repository, TodoEntityMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     @Override
     public Collection<Todo> findAll() {

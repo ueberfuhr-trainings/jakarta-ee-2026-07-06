@@ -16,6 +16,8 @@
         <!-- HTTP-Port, unter dem Liberty die App bereitstellt (siehe server.xml).
              Wird den Integrationstests als System-Property übergeben. -->
         <liberty.http.port>9080</liberty.http.port>
+        <lombok.version>1.18.30</lombok.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
     </properties>
 
     <dependencies>
@@ -37,6 +39,22 @@
 		    <version>1.4.200</version>
 		    <scope>provided</scope>
 		</dependency>
+        <!-- Lombok erzeugt Getter/Setter etc. zur Compile-Zeit (nur dann benötigt) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- MapStruct-API (@Mapper); der Code-Generator läuft als Annotation-Processor
+             (siehe maven-compiler-plugin). Annotationen haben CLASS-Retention, daher
+             zur Laufzeit nicht nötig -> provided. -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- MicroProfile Config (Teil der MicroProfile-4.1-Plattform, passt zu
              mpConfig-2.0 in der server.xml). Nur die API wird zur Compile-Zeit
              gebraucht; die Implementierung liefert Open Liberty. -->
@@ -75,6 +93,35 @@
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>3.12.0</version>
+                </plugin>
+                <!-- Annotation-Processing für Lombok und MapStruct. Das Compiler-Plugin
+                     ist ohnehin lifecycle-gebunden; die Konfiguration hier in
+                     pluginManagement greift daher, ohne es zusätzlich unter <plugins>
+                     aufführen zu müssen. lombok-mapstruct-binding sorgt dafür, dass
+                     MapStruct die von Lombok erzeugten Getter/Setter sieht. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok-mapstruct-binding</artifactId>
+                                <version>0.2.0</version>
+                            </path>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapstruct.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

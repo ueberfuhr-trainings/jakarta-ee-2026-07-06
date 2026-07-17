@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import de.schulung.spring.todos.domain.Todo;
 import de.schulung.spring.todos.domain.TodosDao;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Spring-Data-/JPA-basierte Implementierung von {@link TodosDao}. Nach außen
  * (zur Domäne) spricht sie das Domänenmodell {@link Todo}; intern arbeitet sie
@@ -17,18 +19,15 @@ import de.schulung.spring.todos.domain.TodosDao;
  *
  * <p>Statt eines {@code EntityManager} wird hier das Spring-Data-Repository
  * {@link TodoRepository} injiziert und genutzt – der Datenzugriff steckt also
- * in der Persistenzschicht, nicht in der Domäne.</p>
+ * in der Persistenzschicht, nicht in der Domäne. Den Konstruktor für die
+ * {@code final}-Felder erzeugt Lombok ({@code @RequiredArgsConstructor}).</p>
  */
 @Repository
+@RequiredArgsConstructor
 public class JpaTodosDao implements TodosDao {
 
     private final TodoRepository repository;
     private final TodoEntityMapper mapper;
-
-    public JpaTodosDao(TodoRepository repository, TodoEntityMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     @Override
     public Collection<Todo> findAll() {

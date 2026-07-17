@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 
 import de.schulung.jakartaee.todos.domain.MaximumFuture;
 import de.schulung.jakartaee.todos.domain.Title;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Transport-Repräsentation eines Todos für die REST-API (Request und Response).
@@ -24,8 +26,11 @@ import de.schulung.jakartaee.todos.domain.Title;
  *       {@link TodoDtoMapper}).</li>
  * </ul>
  */
+@Getter
+@Setter
 public class TodoDto {
 
+	@Setter(onMethod = @__(@JsonbTransient))
     private Long id;
 
     @NotNull
@@ -40,46 +45,5 @@ public class TodoDto {
 
     @Pattern(regexp = "ready|in_progress|done")
     private String status;
-
-    public Long getId() {
-        return id;
-    }
-
-    @JsonbTransient
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
 }

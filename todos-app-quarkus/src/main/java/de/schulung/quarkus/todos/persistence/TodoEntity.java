@@ -13,14 +13,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Persistenz-Repräsentation eines Todos (JPA-Entity). Beim Panache-Repository-
  * Ansatz bleibt die Entity ein „normales" JPA-Entity (sie erbt NICHT von
- * {@code PanacheEntity}); der Datenzugriff läuft über das
- * {@link TodoRepository}.
+ * {@code PanacheEntity}); der Datenzugriff läuft über das {@link TodoRepository}.
+ * Getter/Setter erzeugt Lombok; bewusst kein {@code @Data}, um bei einer Entity
+ * keine problematischen equals/hashCode über alle Felder zu generieren.
  */
 @Entity
 @Table(name = "TODOS")
+@Getter
+@Setter
 public class TodoEntity {
 
     @Id
@@ -40,45 +46,5 @@ public class TodoEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", nullable = false, length = 20)
     private TodoStatus status;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public TodoStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TodoStatus status) {
-        this.status = status;
-    }
 
 }
