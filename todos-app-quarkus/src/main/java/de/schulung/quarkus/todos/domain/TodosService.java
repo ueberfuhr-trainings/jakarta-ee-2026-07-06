@@ -2,63 +2,45 @@ package de.schulung.quarkus.todos.domain;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import de.schulung.quarkus.todos.persistence.TodoEntity;
-import de.schulung.quarkus.todos.persistence.TodoEntityMapper;
-import de.schulung.quarkus.todos.persistence.TodoRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 
 /**
- * Fachliche Verwaltung der Todos. Nutzt das Panache-{@link TodoRepository} für
- * den Datenzugriff und wandelt zwischen {@link TodoEntity} und dem
- * Domänenmodell {@link Todo} um.
+ * Fachliche Verwaltung der Todos. Der Service enthält die Business-Logik und
+ * delegiert den reinen Datenzugriff an das {@link TodosDao}. Er kennt dabei nur
+ * das Interface, nicht dessen konkrete (Panache-/JPA-)Implementierung.
  */
 @ApplicationScoped
-@Transactional
 public class TodosService {
 
-    private final TodoRepository repository;
-    private final TodoEntityMapper mapper;
+    private final TodosDao todosDao;
 
-    public TodosService(TodoRepository repository, TodoEntityMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
+    public TodosService(TodosDao todosDao) {
+        this.todosDao = todosDao;
     }
 
     public Collection<Todo> getTodos() {
-        return repository.listAll()
-                .stream()
-                .map(mapper::toDomain)
-                .collect(Collectors.toList());
+        return todosDao.findAll();
     }
 
     public Collection<Todo> getTodos(String search) {
-        return repository.findByTitleContainingIgnoreCase(search)
-                .stream()
-                .map(mapper::toDomain)
-                .collect(Collectors.toList());
+        return todosDao.findByTitleContains(search);
     }
 
     public Optional<Todo> getTodo(long id) {
-        return Optional.ofNullable(repository.findById(id)).map(mapper::toDomain);
+        return todosDao.findById(id);
     }
 
     public void addTodo(Todo todo) {
-        TodoEntity entity = mapper.toEntity(todo);
-        repository.persist(entity);
-        // generierte id in das übergebene Todo zurückschreiben
-        todo.setId(entity.getId());
+        todosDao.save(todo);
     }
 
     public boolean deleteTodo(long id) {
-        return repository.deleteById(id);
+        return todosDao.deleteById(id);
     }
 
     public long count() {
-        return repository.count();
+        return todosDao.count();
     }
 
 }
