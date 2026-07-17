@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="todos-spring-server">
+
+    <!-- DI, REST (MVC), Transaktionsklammer und Validierung bringt Spring selbst mit
+         (daher keine cdi-/jaxrs-/mpConfig-Features). JPA und die DataSource stellt
+         hingegen der Liberty bereit: jpa-2.2 verarbeitet die persistence.xml und
+         bindet die EntityManagerFactory (per persistence-unit-ref in der web.xml)
+         ins JNDI, wo Spring sie abholt. -->
+    <featureManager>
+        <feature>servlet-4.0</feature>
+        <feature>jsp-2.3</feature>
+        <feature>jpa-2.2</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443" />
+
+    <!-- H2-JDBC-Treiber (per liberty-maven-plugin nach shared/resources kopiert) -->
+    <library id="h2">
+        <fileset dir="${shared.resource.dir}" includes="h2-*.jar"/>
+    </library>
+
+    <variable name="todos.db.url"
+              defaultValue="jdbc:h2:file:${todos.db.dir}/todos-spring;AUTO_SERVER=TRUE"/>
+
+    <dataSource id="todosDS" jndiName="jdbc/todos">
+        <jdbcDriver libraryRef="h2"/>
+        <properties URL="${todos.db.url}" user="sa" password="sa"/>
+    </dataSource>
+
+    <!-- WAR automatisch entpacken -->
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="/todos-app" location="todos-app-spring.war" />
+
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+</server>

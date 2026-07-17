@@ -1,0 +1,36 @@
+name: todos-app-spring (Spring)
+
+# Läuft nur, wenn Dateien im Ordner todos-app-spring/ (oder dieser Workflow)
+# geändert wurden – bei Pull Requests und beim Merge (Push) auf main.
+on:
+  pull_request:
+    paths:
+      - 'todos-app-spring/**'
+      - '.github/workflows/build-todos-app-spring.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'todos-app-spring/**'
+      - '.github/workflows/build-todos-app-spring.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # mvn test führt die Spring-MockMvc-Tests in-JVM aus (ohne Liberty,
+      # In-Memory-H2). Es wird kein Server gestartet.
+      - name: Test (mvn test)
+        working-directory: todos-app-spring
+        run: mvn -B clean test

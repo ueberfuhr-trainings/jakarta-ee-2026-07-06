@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.schulung.spring</groupId>
+    <artifactId>todos-app-spring</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <!--
+        Vergleichsvariante zur Jakarta-EE-App (../todos-app): dieselbe Fachlichkeit,
+        umgesetzt mit dem Spring Framework 5 (OHNE Spring Boot) und als WAR auf
+        demselben Open Liberty deployt. Start wie beim Original per 'mvn liberty:dev'.
+        DI, REST (MVC), Transaktionsklammer und Validierung bringt Spring selbst mit;
+        JPA (persistence.xml) und die DataSource stellt hingegen der Liberty bereit,
+        Spring holt die EntityManagerFactory per JNDI. Im Test (Profil "test") wird
+        stattdessen eine In-Memory-H2 samt eigener EntityManagerFactory verwendet.
+    -->
+
+    <properties>
+        <maven.compiler.release>11</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>5.3.39</spring.version>
+        <spring-data.version>2.7.18</spring-data.version>
+        <hibernate.version>5.6.15.Final</hibernate.version>
+    </properties>
+
+    <dependencies>
+        <!-- Spring Web MVC (REST-Controller + JSP-Views) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- Spring ORM + Spring Data JPA (Repository-Abstraktion) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data.version}</version>
+        </dependency>
+        <!-- JPA-Provider Hibernate NUR fuer die Tests: dort baut TestPersistenceConfig
+             eine eigene EntityManagerFactory. In Produktion liefert Liberty die JPA
+             (EclipseLink) per JNDI, daher hier kein Hibernate im WAR. -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Bean Validation (Hibernate Validator) -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.2.5.Final</version>
+        </dependency>
+
+        <!-- JSON-Serialisierung fuer die REST-Controller (inkl. java.time) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.13.5</version>
+        </dependency>
+
+        <!-- H2-Treiber: in Produktion als Liberty-Shared-Library genutzt (per
+             copyDependencies nach shared/resources kopiert, siehe unten), im Test
+             fuer die In-Memory-DataSource. Daher 'provided' (nicht im WAR). -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Vom Server (Liberty) bereitgestellt -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JPA-API (javax.persistence): zur Compile-Zeit noetig, zur Laufzeit vom
+             Liberty (jpa-2.2) bereitgestellt -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Tests: Spring TestContext (SpringExtension) + MockMvc, in-JVM (ohne Boot, ohne Liberty) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- json-path fuer die jsonPath(...)-Matcher von MockMvc -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Hamcrest wird von den MockMvc-Matchern (ResultMatcher-Signaturen) benoetigt -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>todos-app-spring</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <!-- H2-Treiber als Liberty-Shared-Library bereitstellen (fuer die
+                         vom Server verwaltete DataSource jdbc/todos) -->
+                    <copyDependencies>
+                        <dependencyGroup>
+                            <location>${project.build.directory}/liberty/wlp/usr/shared/resources</location>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                            </dependency>
+                        </dependencyGroup>
+                    </copyDependencies>
+                    <bootstrapProperties>
+                        <todos.db.dir>${project.basedir}/.localdb</todos.db.dir>
+                    </bootstrapProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-server</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>create</goal>
+                            <goal>install-feature</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

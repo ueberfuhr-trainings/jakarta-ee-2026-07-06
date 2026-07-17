@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+    <!-- Vom Open Liberty verwaltete Persistence-Unit (JTA). Die EntityManagerFactory
+         wird über den persistence-unit-ref in web.xml ins JNDI gebunden und dort von
+         Spring (LibertyPersistenceConfig) abgeholt. -->
+    <persistence-unit name="todos" transaction-type="JTA">
+        <jta-data-source>jdbc/todos</jta-data-source>
+        <class>de.schulung.spring.todos.persistence.TodoEntity</class>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+        </properties>
+    </persistence-unit>
+</persistence>

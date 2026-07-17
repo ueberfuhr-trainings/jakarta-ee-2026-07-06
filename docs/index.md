@@ -28,7 +28,6 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 | Wiederholung | [Todos löschen](./02-jakarta-ee/09-todos-loeschen/issue.md)                               |
 | 09           | [REST API – Todos anlegen (POST)](./02-jakarta-ee/10-rest-apis/issue.md)                  |
 | 10           | [REST API – Todos auslesen und löschen](./02-jakarta-ee/11-rest-apis-lesen-loeschen/issue.md) |
-| 11           | [Konfiguration mit MicroProfile Config](./02-jakarta-ee/12-microprofile-config/issue.md)  |
 
 ## Clean Code / Clean Architecture
 
@@ -36,3 +35,10 @@ Willkommen bei den Übungen zur Schulung "Jakarta EE -  Grundlagen".
 |-----|-----------------------------------------------------------------------------------------------|
 | 01  | [Schichtenarchitektur](./03-clean-architecture/01-schichtenarchitektur/issue.md)              |
 | 02  | [Eigenes Datenmodell je Schicht](./03-clean-architecture/02-datenmodelle-je-schicht/issue.md) |
+
+## Ausblick
+
+| Nr. | Übung                                                                                              |
+|-----|----------------------------------------------------------------------------------------------------|
+| 01  | [Konfiguration mit MicroProfile Config](./04-ausblick/01-microprofile-config/issue.md)             |
+| 02  | [Frameworks im Vergleich – Jakarta EE, Spring, Quarkus](./04-ausblick/02-framework-vergleich/issue.md) |
