@@ -1,11 +1,14 @@
-name: Build todos-app WAR
+name: todos-app (Jakarta EE)
 
+# Läuft nur, wenn Dateien im Ordner todos-app/ (oder dieser Workflow) geändert
+# wurden – bei Pull Requests und beim Merge (Push) auf main.
 on:
-  push:
+  pull_request:
     paths:
       - 'todos-app/**'
       - '.github/workflows/build-todos-app.yml'
-  pull_request:
+  push:
+    branches: [ main ]
     paths:
       - 'todos-app/**'
       - '.github/workflows/build-todos-app.yml'
@@ -19,14 +22,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
           cache: maven
 
-      - name: Build WAR
+      # mvn verify baut das WAR und führt die Integrationstests (REST-Assured)
+      # gegen einen von Maven gestarteten Open Liberty mit In-Memory-Datasource aus.
+      - name: Build & test (mvn verify)
         working-directory: todos-app
         run: mvn -B clean verify
 
