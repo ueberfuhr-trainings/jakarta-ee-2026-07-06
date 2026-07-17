@@ -5,19 +5,20 @@ import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Fachliche Verwaltung der Todos. Der Service enthält die Business-Logik und
  * delegiert den reinen Datenzugriff an das {@link TodosDao}. Er kennt dabei nur
- * das Interface, nicht dessen konkrete (Panache-/JPA-)Implementierung.
+ * das Interface, nicht dessen konkrete (Panache-/JPA-)Implementierung. Den
+ * Konstruktor für die {@code final}-Felder erzeugt Lombok
+ * ({@code @RequiredArgsConstructor}); ArC nutzt ihn für Constructor-Injection.
  */
 @ApplicationScoped
+@RequiredArgsConstructor
 public class TodosService {
 
     private final TodosDao todosDao;
-
-    public TodosService(TodosDao todosDao) {
-        this.todosDao = todosDao;
-    }
 
     public Collection<Todo> getTodos() {
         return todosDao.findAll();
