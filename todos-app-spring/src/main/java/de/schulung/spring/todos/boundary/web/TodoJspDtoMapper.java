@@ -1,31 +1,26 @@
 package de.schulung.spring.todos.boundary.web;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import de.schulung.spring.todos.domain.Todo;
 import de.schulung.spring.todos.domain.TodoStatus;
 
 /**
  * Wandelt das Domänenmodell {@link Todo} in das Anzeige-DTO {@link TodoJspDto}
- * um (nur diese Richtung wird für die Anzeige gebraucht).
+ * um (nur diese Richtung wird für die Anzeige gebraucht). Die Implementierung
+ * erzeugt MapStruct; {@code componentModel = "spring"} macht daraus eine Bean.
  */
-@Component
-public class TodoJspDtoMapper {
+@Mapper(componentModel = "spring")
+public interface TodoJspDtoMapper {
 
-    public TodoJspDto toJspDto(Todo todo) {
-        if (todo == null) {
-            return null;
-        }
-        TodoJspDto dto = new TodoJspDto();
-        dto.setId(todo.getId());
-        dto.setTitle(todo.getTitle());
-        dto.setDescription(todo.getDescription());
-        dto.setDueDate(todo.getDueDate());
-        dto.setStatus(mapStatus(todo.getStatus()));
-        return dto;
-    }
+    TodoJspDto toJspDto(Todo todo);
 
-    private String mapStatus(TodoStatus status) {
+    /**
+     * Bildet den Status auf eine Anzeige-Bezeichnung ab. MapStruct verwendet
+     * diese Methode automatisch für das Feld {@code status} (TodoStatus →
+     * String) – bewusst per {@code switch}, nicht über {@link Enum#name()}.
+     */
+    default String mapStatus(TodoStatus status) {
         if (status == null) {
             return null;
         }

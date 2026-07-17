@@ -1,47 +1,25 @@
 package de.schulung.spring.todos.boundary.rest;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import de.schulung.spring.todos.domain.Todo;
 import de.schulung.spring.todos.domain.TodoStatus;
 
 /**
  * Wandelt zwischen dem Domänenmodell {@link Todo} und dem REST-{@link TodoDto}
- * um. Der Status wird dabei zwischen dem internen Enum und den API-Werten
- * {@code ready} / {@code in_progress} / {@code done} übersetzt.
+ * um. Die Implementierung erzeugt MapStruct zur Compile-Zeit;
+ * {@code componentModel = "spring"} macht daraus eine injizierbare Spring-Bean.
+ * Der Status wird über die {@code default}-Methoden zwischen dem internen Enum
+ * und den API-Werten {@code ready} / {@code in_progress} / {@code done} übersetzt.
  */
-@Component
-public class TodoDtoMapper {
+@Mapper(componentModel = "spring")
+public interface TodoDtoMapper {
 
-    public TodoDto toDto(Todo todo) {
-        if (todo == null) {
-            return null;
-        }
-        TodoDto dto = new TodoDto();
-        dto.setId(todo.getId());
-        dto.setTitle(todo.getTitle());
-        dto.setDescription(todo.getDescription());
-        dto.setDueDate(todo.getDueDate());
-        dto.setStatus(toApiStatus(todo.getStatus()));
-        return dto;
-    }
+    TodoDto toDto(Todo todo);
 
-    public Todo toDomain(TodoDto dto) {
-        if (dto == null) {
-            return null;
-        }
-        // Die id wird beim Anlegen nicht übernommen (der Server vergibt sie).
-        Todo todo = new Todo()
-                .setTitle(dto.getTitle())
-                .setDescription(dto.getDescription())
-                .setDueDate(dto.getDueDate());
-        if (dto.getStatus() != null) {
-            todo.setStatus(fromApiStatus(dto.getStatus()));
-        }
-        return todo;
-    }
+    Todo toDomain(TodoDto dto);
 
-    private String toApiStatus(TodoStatus status) {
+    default String toApiStatus(TodoStatus status) {
         if (status == null) {
             return null;
         }
@@ -57,7 +35,11 @@ public class TodoDtoMapper {
         }
     }
 
-    private TodoStatus fromApiStatus(String status) {
+    default TodoStatus fromApiStatus(String status) {
+        if (status == null) {
+            // MapStruct ruft diese Methode auch bei fehlendem status auf -> Default
+            return TodoStatus.ERSTELLT;
+        }
         switch (status) {
             case "ready":
                 return TodoStatus.ERSTELLT;
