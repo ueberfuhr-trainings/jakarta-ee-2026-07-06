@@ -26,26 +26,24 @@ import de.schulung.spring.todos.domain.TodosService;
  * und verarbeitet die Formulare zum Anlegen und Löschen.
  */
 @Controller
-public class TodosWebController {
+public class TodosController {
 
     private final TodosService todosService;
     private final TodoJspDtoMapper mapper;
     private final Validator validator;
 
-    public TodosWebController(TodosService todosService, TodoJspDtoMapper mapper, Validator validator) {
+    public TodosController(TodosService todosService, TodoJspDtoMapper mapper, Validator validator) {
         this.todosService = todosService;
         this.mapper = mapper;
         this.validator = validator;
     }
 
-    /** Startseite: statische index.html an den Default-Servlet weiterreichen. */
-    @GetMapping("/")
-    public String index() {
-        return "forward:/index.html";
-    }
-
     @GetMapping("/todos")
-    public String list(@RequestParam(name = "search", required = false) String search, Model model) {
+    public String list(
+    		@RequestParam(name = "search", required = false) 
+    		String search, 
+    		Model model
+    ) {
         List<TodoJspDto> todos = ((search != null && !search.trim().isEmpty())
                 ? todosService.getTodos(search.trim())
                 : todosService.getTodos())
@@ -58,9 +56,13 @@ public class TodosWebController {
 
     @PostMapping("/add-todo")
     public String add(
-            @RequestParam("title") String title,
-            @RequestParam(name = "description", required = false) String description,
-            @RequestParam(name = "dueDate", required = false) String dueDateParam) {
+            @RequestParam("title")
+            String title,
+            @RequestParam(name = "description", required = false)
+            String description,
+            @RequestParam(name = "dueDate", required = false)
+            String dueDateParam
+    ) {
 
         LocalDate dueDate = null;
         if (dueDateParam != null && !dueDateParam.trim().isEmpty()) {
@@ -86,7 +88,10 @@ public class TodosWebController {
     }
 
     @PostMapping("/delete-todo")
-    public String delete(@RequestParam("id") long id) {
+    public String delete(
+    		@RequestParam("id") 
+    		long id
+    ) {
         todosService.deleteTodo(id);
         return "redirect:/todos";
     }

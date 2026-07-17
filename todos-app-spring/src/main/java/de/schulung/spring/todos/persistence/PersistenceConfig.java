@@ -1,4 +1,4 @@
-package de.schulung.spring.todos.config;
+package de.schulung.spring.todos.persistence;
 
 import java.util.Properties;
 

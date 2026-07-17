@@ -10,13 +10,13 @@
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="9090"
+                  httpPort="9080"
                   httpsPort="9443" />
 
     <!-- WAR automatisch entpacken -->
     <applicationManager autoExpand="true"/>
 
-    <webApplication contextRoot="/todos-app-spring" location="todos-app-spring.war" />
+    <webApplication contextRoot="/todos-app" location="todos-app-spring.war" />
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 </server>

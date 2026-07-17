@@ -25,9 +25,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.jayway.jsonpath.JsonPath;
 
-import de.schulung.spring.todos.config.AppConfig;
-import de.schulung.spring.todos.config.PersistenceConfig;
-import de.schulung.spring.todos.config.WebConfig;
+import de.schulung.spring.todos.boundary.WebConfig;
+import de.schulung.spring.todos.persistence.PersistenceConfig;
 
 /**
  * Tests der REST-API über die Spring-TestContext-Integration ({@link SpringExtension},
@@ -41,8 +40,14 @@ import de.schulung.spring.todos.config.WebConfig;
  */
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { AppConfig.class, WebConfig.class, PersistenceConfig.class })
-@TestPropertySource(properties = "todos.db.url=jdbc:h2:mem:todos-test;DB_CLOSE_DELAY=-1")
+@ContextConfiguration(classes = { 
+	AppConfig.class, 
+	WebConfig.class, 
+	PersistenceConfig.class 
+})
+@TestPropertySource(properties = {
+	"todos.db.url=jdbc:h2:mem:todos-test;DB_CLOSE_DELAY=-1"		
+})
 class TodosRestTests {
 
     @Autowired
@@ -52,7 +57,8 @@ class TodosRestTests {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders
+        		.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test

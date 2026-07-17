@@ -1,4 +1,4 @@
-package de.schulung.spring.todos.config;
+package de.schulung.spring.todos;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -7,6 +7,9 @@ import javax.servlet.ServletRegistration;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import de.schulung.spring.todos.boundary.WebConfig;
+import de.schulung.spring.todos.persistence.PersistenceConfig;
 
 /**
  * Programmatischer Ersatz für web.xml (Servlet 3.0+): registriert die Spring

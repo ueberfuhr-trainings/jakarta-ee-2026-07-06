@@ -1,4 +1,4 @@
-package de.schulung.spring.todos.config;
+package de.schulung.spring.todos;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import de.schulung.spring.todos.boundary.WebConfig;
+import de.schulung.spring.todos.persistence.PersistenceConfig;
 
 /**
  * Wurzel-Konfiguration: scannt die Anwendungs-Beans (Controller, Services,

@@ -31,30 +31,38 @@ import de.schulung.spring.todos.domain.TodosService;
  */
 @RestController
 @RequestMapping("/api/todos")
-public class TodosController {
+public class TodosRestController {
 
     private final TodosService todosService;
     private final TodoDtoMapper mapper;
 
-    public TodosController(TodosService todosService, TodoDtoMapper mapper) {
+    public TodosRestController(TodosService todosService, TodoDtoMapper mapper) {
         this.todosService = todosService;
         this.mapper = mapper;
     }
 
     @PostMapping
-    public ResponseEntity<TodoDto> create(@Valid @RequestBody TodoDto dto) {
+    public ResponseEntity<TodoDto> create(
+    		@Valid 
+    		@RequestBody 
+    		TodoDto dto
+    ) {
         Todo todo = mapper.toDomain(dto);
         todosService.addTodo(todo);   // setzt die generierte id in todo
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        URI location = ServletUriComponentsBuilder
+        		.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(todo.getId())
                 .toUri();
-        return ResponseEntity.created(location).body(mapper.toDto(todo));
+        return ResponseEntity
+        		.created(location)
+        		.body(mapper.toDto(todo));
     }
 
     @GetMapping
     public List<TodoDto> findAll() {
-        return todosService.getTodos()
+        return todosService
+        		.getTodos()
                 .stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
@@ -62,7 +70,8 @@ public class TodosController {
 
     @GetMapping("/{id}")
     public TodoDto findOne(@PathVariable long id) {
-        return todosService.getTodo(id)
+        return todosService
+        		.getTodo(id)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
